@@ -1,0 +1,14 @@
+{
+  "model_name": "StepWise Stage 4 Molecular PET & ARIA Multimodal XGBoost",
+  "mean_cv_roc_auc": 0.8185,
+  "std_cv_roc_auc": 0.0172,
+  "holdout_roc_auc": 0.8446,
+  "brier_score": 0.0493,
+  "optimal_threshold_t4": 0.0993,
+  "sensitivity": 0.7179,
+  "specificity": 0.8682,
+  "negative_predictive_value": 0.9776,
+  "positive_predictive_value": 0.2772,
+  "holdout_sample_size": 593,
+  "num_features": 96
+}
