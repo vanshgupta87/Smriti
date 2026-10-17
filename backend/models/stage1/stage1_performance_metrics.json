@@ -1,0 +1,55 @@
+{
+  "temporal_roc_auc": 0.7173,
+  "temporal_pr_auc": 0.2055,
+  "temporal_brier": 0.0501,
+  "optimal_threshold": 0.0737,
+  "sensitivity": 0.5143,
+  "specificity": 0.8328,
+  "confusion_matrix": [
+    [
+      483,
+      97
+    ],
+    [
+      17,
+      18
+    ]
+  ],
+  "topk_prioritization": [
+    {
+      "Top_Queue": "Top 5%",
+      "Selected_Patients": 31,
+      "Progressors_Captured": 10,
+      "Capture_Recall": 0.2857,
+      "Queue_Precision": 0.3226
+    },
+    {
+      "Top_Queue": "Top 10%",
+      "Selected_Patients": 62,
+      "Progressors_Captured": 13,
+      "Capture_Recall": 0.3714,
+      "Queue_Precision": 0.2097
+    },
+    {
+      "Top_Queue": "Top 20%",
+      "Selected_Patients": 123,
+      "Progressors_Captured": 18,
+      "Capture_Recall": 0.5143,
+      "Queue_Precision": 0.1463
+    },
+    {
+      "Top_Queue": "Top 30%",
+      "Selected_Patients": 185,
+      "Progressors_Captured": 21,
+      "Capture_Recall": 0.6,
+      "Queue_Precision": 0.1135
+    },
+    {
+      "Top_Queue": "Top 50%",
+      "Selected_Patients": 308,
+      "Progressors_Captured": 26,
+      "Capture_Recall": 0.7429,
+      "Queue_Precision": 0.0844
+    }
+  ]
+}
