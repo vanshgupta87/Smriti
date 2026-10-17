@@ -1,0 +1,20 @@
+# StepWise PRO: Precision Care Diagnostic Engine
+
+> **Grand Finale Submission · Precision Care Challenge 2026**  
+> Multimodal 4-Stage Gated Decision Support Architecture for Early Cognitive Decline & DMT Readiness.
+
+---
+
+## 👥 Core Engineering Team
+- **Ashish Kumar** (`ashishkumartiwari2028@gmail.com`) — *Lead ML Engineer* (Stages 1-4 XGBoost, TreeSHAP, Platt Calibration)
+- **Aditya Sharma** (`aadisharma.0285@gmail.com`) — *Computer Vision & Neuroimaging* (2.5D ResNet-18 Multi-Task MRI & PET Heads)
+- **Sahil Raj Dubey** (`sahilrajdubey@gmail.com`) — *Systems & Backend Architect* (FastAPI Core, FHIR R4 Engine, CDS Hooks)
+- **Vansh Gupta** (`vijaygupta0718@gmail.com`) — *Lead Frontend Engineer* (Next.js 14 Clinician Command Center, Dual DICOM Viewer)
+
+---
+
+## 🏥 Clinical Architecture & 4-Stage Funnel
+1. **Stage 1 (Primary Care):** Non-invasive Cognitive Screening (`MMSE`, `MoCA`, `FAQ`, Vitals, Comorbidities) $\rightarrow$ 24-Month Rapid Progression Velocity Risk.
+2. **Stage 2 (Phlebotomy):** 7-Assay Harmonized Biofluids ($p\text{-tau217}$, $A\beta_{42/40}$, $\text{NfL}$, $\text{GFAP}$) + `APOE-ε4` Genotyping.
+3. **Stage 3 (Radiology):** 3D Volumetric MRI Morphometry (Hippocampal/ICV ratio, Entorhinal thickness, White Matter Hyperintensities).
+4. **Stage 4 (Molecular Imaging):** Amyloid Centiloids ($0-100\text{ CL}$), Meta-temporal Tau SUVR, ARIA Safety Profiler & DMT Authorization.
