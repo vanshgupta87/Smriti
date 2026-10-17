@@ -1,0 +1,32 @@
+GE HEALTHCARE PRECISION MEDICINE - LAB WORKUP
+Patient Name: John D. Mitchell
+MRN: ADNI-002-S-0685
+Age: 68
+Gender: Male
+Education Years: 14
+APOE Genotype: e3/e4
+
+CLINICAL ASSESSMENTS:
+MMSE Score: 23.0
+MoCA Score: 20.0
+CDR-SB Total: 3.5
+FAQ Total: 8.0
+ADAS-13: 19.0
+GDS-15: 3.0
+
+PLASMA PROTEOMICS:
+p-tau217: 0.32 pg/mL
+Ab42/Ab40: 0.061
+NfL: 22.0 pg/mL
+GFAP: 195.0 pg/mL
+
+VOLUMETRIC 3D MRI:
+Hippocampus Volume: 3.40 cm3
+Ventricles Volume: 36.0 cm3
+WMH Volume: 3.8 cm3
+MTA Grade: 2
+
+MOLECULAR AMYLOID PET:
+Centiloids: 34.0 CL
+Tau SUVR: 1.25
+Cerebral Microbleeds: 0

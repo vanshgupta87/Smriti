@@ -1,0 +1,32 @@
+LABCORP NEUROLOGICAL ASSESSMENT REPORT
+Patient Name: Sarah Jenkins
+MRN: ADNI-003-S-1024
+Age: 62
+Gender: Female
+Education Years: 18
+APOE Genotype: e3/e3
+
+CLINICAL ASSESSMENTS:
+MMSE Score: 28.0
+MoCA Score: 26.0
+CDR-SB Total: 0.5
+FAQ Total: 1.0
+ADAS-13: 8.0
+GDS-15: 2.0
+
+PLASMA PROTEOMICS:
+p-tau217: 0.12 pg/mL (Normal Reference < 0.22)
+Ab42/Ab40: 0.092 (Normal Reference > 0.075)
+NfL: 11.5 pg/mL
+GFAP: 110.0 pg/mL
+
+VOLUMETRIC 3D MRI:
+Hippocampus Volume: 4.10 cm3
+Ventricles Volume: 24.0 cm3
+WMH Volume: 1.2 cm3
+MTA Grade: 0
+
+MOLECULAR AMYLOID PET:
+Centiloids: 8.5 CL (Amyloid Negative)
+Tau SUVR: 1.04
+Cerebral Microbleeds: 0

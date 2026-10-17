@@ -1,0 +1,32 @@
+QUEST DIAGNOSTICS - CLINICAL NEURO-BIOMARKER & COGNITIVE SUMMARY
+Patient Name: Eleanor K. Rostova
+MRN: ADNI-002-S-0413
+Age: 74
+Gender: Female
+Education Years: 16
+APOE Genotype: e4/e4
+
+CLINICAL ASSESSMENTS:
+MMSE Score: 18.0
+MoCA Score: 14.0
+CDR-SB Total: 7.5
+FAQ Total: 18.0
+ADAS-13: 32.5
+GDS-15: 4.0
+
+PLASMA PROTEOMICS (Simoa HD-X):
+p-tau217: 0.48 pg/mL (High Risk Reference > 0.38)
+Ab42/Ab40: 0.052 (Abnormal Reference < 0.065)
+NfL: 38.5 pg/mL
+GFAP: 320.0 pg/mL
+
+VOLUMETRIC 3D MRI (FreeSurfer v7.4):
+Hippocampus Volume: 2.85 cm3
+Ventricles Volume: 48.2 cm3
+WMH Volume: 6.4 cm3
+MTA Grade: 3
+
+MOLECULAR AMYLOID PET (GAAIN Standard):
+Centiloids: 78.4 CL (Amyloid Positive Threshold >= 20.0)
+Tau SUVR: 1.62
+Cerebral Microbleeds: 1
