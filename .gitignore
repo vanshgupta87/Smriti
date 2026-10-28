@@ -1,5 +1,6 @@
 # System & IDE
 .DS_Store
+Thumbs.db
 *.swp
 *.swo
 .vscode/
@@ -11,33 +12,60 @@ __pycache__/
 *$py.class
 *.so
 .Python
+
+# Python virtual environments
 env/
 venv/
 .venv/
+.venv311/
 ENV/
+
+# Python cache and test artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.tox/
+.nox/
 
 # Node & Next.js
 node_modules/
 .next/
 out/
+dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.tsbuildinfo
 
-# Large Raw Datasets (Keeps GitHub lightweight)
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Large raw datasets
 Dataset/
 data/raw/
 data/processed/stage*.parquet
-*.tsbuildinfo
 *.nii
 *.nii.gz
 *.dcm
 *.zip
 *.tar.gz
+
+# Databases
 stepwise.db
+*.sqlite
+*.sqlite3
+
+# Processed diagnosis data
 data/processed/current_status_diagnosis.*
 
-# Model weights & trained artifacts (PROTECTED)
+# Model weights & trained artifacts
 *.pth
 *.pt
 *.joblib
@@ -45,3 +73,11 @@ data/processed/current_status_diagnosis.*
 backend/models/**/*.joblib
 backend/models/**/*.pt
 backend/models/**/*.pth
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Build and temporary files
+*.tmp
+*.bak
+*.orig
