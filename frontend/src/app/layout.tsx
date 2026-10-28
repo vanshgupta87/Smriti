@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'GE Healthcare StepWise | Precision Care Clinical Command Center',
-  description: 'AI-Driven 4-Stage Clinical Decision Support Prioritization Platform for Early Alzheimer Diagnostic Pathways',
+  title: 'Smriti | Brain Health & Connected Care',
+  description: 'Explore Smriti, a brain health platform for Alzheimer’s care pathways, brain tumor detection, and connected telemedicine consultations.',
 }
 
 export default function RootLayout({

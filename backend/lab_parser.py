@@ -1,5 +1,5 @@
 """
-StepWise PRO: Clinical Lab PDF & EHR Report Parser
+Smriti: Clinical Lab PDF & EHR Report Parser
 Zero-dependency, high-speed pure-Python text and PDF stream parser.
 """
 

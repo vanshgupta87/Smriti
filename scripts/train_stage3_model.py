@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-StepWise: Stage 3 ML Training, Calibration & Explainability Engine
+Smriti: Stage 3 ML Training, Calibration & Explainability Engine
 Trains the Stage 3 Volumetric MRI Morphometry XGBoost Classifier with
 Temporal Holdout Validation, Isotonic Calibration, TreeSHAP Explainability,
 and Top-K Prioritization Queue Metrics.
@@ -49,7 +49,7 @@ N_SPLITS = 5
 
 def load_and_prep_data():
     print("=" * 70)
-    print("STEPWISE: LOADING STAGE 3 VOLUMETRIC MRI DATASET")
+    print("SMRITI: LOADING STAGE 3 VOLUMETRIC MRI DATASET")
     print("=" * 70)
     
     if not DATA_PATH.exists():
@@ -61,7 +61,8 @@ def load_and_prep_data():
     
     DROP_COLS = {
         "PTID", "RID", "VISCODE", "VISCODE2", "VISDATE", 
-        "DIAGNOSIS", "Progression24m", "FutureVisitsWithin24m"
+        "DIAGNOSIS", "Progression24m", "FutureVisitsWithin24m",
+        "DMT_Eligibility_Flag"
     }
     
     feature_cols = [c for c in df.columns if c not in DROP_COLS]
@@ -176,7 +177,7 @@ def train_and_cross_validate(dev_df, feature_cols):
     return final_xgb, calibrator, fold_metrics, oof_raw, oof_calibrated
 
 
-def evaluate_temporal_holdout(final_xgb, calibrator, holdout_df, feature_cols):
+def evaluate_temporal_holdout(final_xgb, calibrator, holdout_df, feature_cols, optimal_threshold):
     X_test = holdout_df[feature_cols].copy()
     y_test = holdout_df["Progression24m"].astype(int).values
     
@@ -187,13 +188,12 @@ def evaluate_temporal_holdout(final_xgb, calibrator, holdout_df, feature_cols):
     test_pr_auc = average_precision_score(y_test, cal_probs)
     test_brier = brier_score_loss(y_test, cal_probs)
     
-    fpr, tpr, thresholds = roc_curve(y_test, cal_probs)
-    j_scores = tpr - fpr
-    opt_idx = np.argmax(j_scores)
-    optimal_threshold = float(thresholds[opt_idx])
-    
+    fpr, tpr, _ = roc_curve(y_test, cal_probs)
     preds_binary = (cal_probs >= optimal_threshold).astype(int)
     cm = confusion_matrix(y_test, preds_binary)
+    tn, fp, fn, tp = cm.ravel()
+    sensitivity = tp / (tp + fn) if tp + fn else 0.0
+    specificity = tn / (tn + fp) if tn + fp else 0.0
     
     order = np.argsort(-cal_probs)
     total_pos = y_test.sum()
@@ -218,8 +218,8 @@ def evaluate_temporal_holdout(final_xgb, calibrator, holdout_df, feature_cols):
         "temporal_pr_auc": round(float(test_pr_auc), 4),
         "temporal_brier": round(float(test_brier), 4),
         "optimal_threshold": round(float(optimal_threshold), 4),
-        "sensitivity": round(float(tpr[opt_idx]), 4),
-        "specificity": round(float(1 - fpr[opt_idx]), 4),
+        "sensitivity": round(float(sensitivity), 4),
+        "specificity": round(float(specificity), 4),
         "confusion_matrix": cm.tolist(),
         "topk_prioritization": topk_summary
     }
@@ -309,7 +309,13 @@ def main():
     dev_df, holdout_df = temporal_patient_split(df, feature_cols)
     
     final_xgb, calibrator, cv_metrics, oof_raw, oof_calibrated = train_and_cross_validate(dev_df, feature_cols)
-    raw_probs, cal_probs, metrics, roc_data, topk_summary = evaluate_temporal_holdout(final_xgb, calibrator, holdout_df, feature_cols)
+    threshold_fpr, threshold_tpr, threshold_values = roc_curve(
+        dev_df["Progression24m"].astype(int).values, oof_calibrated
+    )
+    optimal_threshold = float(threshold_values[np.argmax(threshold_tpr - threshold_fpr)])
+    raw_probs, cal_probs, metrics, roc_data, topk_summary = evaluate_temporal_holdout(
+        final_xgb, calibrator, holdout_df, feature_cols, optimal_threshold
+    )
     
     generate_visualizations(final_xgb, calibrator, dev_df, holdout_df, feature_cols, metrics, roc_data, topk_summary)
     
@@ -324,7 +330,7 @@ def main():
         json.dump(metrics, f, indent=2)
         
     print(f"Stage 3 Model artifacts successfully written to: {MODEL_DIR}")
-    print("\n✅ STAGE 3 ENGINE COMPLETE AND FULLY TRAINED!")
+    print("\nStage 3 training and evaluation complete.")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,6 @@
+{
+  "optimal_threshold": 0.07648249715566635,
+  "sensitivity": 0.53125,
+  "specificity": 0.8235294117647058,
+  "criterion": "Youden_J"
+}

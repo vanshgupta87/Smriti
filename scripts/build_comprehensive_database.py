@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-StepWise PRO: Comprehensive Clinical Population & Database Generator (Pure Standard Library)
+Smriti: Comprehensive Clinical Population & Database Generator (Pure Standard Library)
 Builds the 50-patient authentic ADNI cohort with 30+ clinical parameters,
 longitudinal visits (M00, M12, M24), 5 Golden Archetypes, and populates
 both SQLite (stepwise.db) and CSV/JSON stores for the clinical command center.
@@ -25,6 +25,25 @@ DB_PATH = BACKEND_DATA / "stepwise.db"
 CSV_PATH = BACKEND_DATA / "stepwise_curated_cohort.csv"
 JSON_PATH_BACKEND = BACKEND_DATA / "patients.json"
 JSON_PATH_FRONTEND = FRONTEND_DATA / "patients.json"
+INDIAN_DEMO_NAMES = {
+    "Male": [
+        "Aarav Sharma", "Vivaan Patel", "Aditya Verma", "Arjun Rao",
+        "Rohan Mehta", "Kabir Singh", "Ishaan Gupta", "Dev Malhotra",
+        "Karan Iyer", "Rahul Nair", "Vikram Joshi", "Siddharth Das",
+        "Manish Kapoor", "Rajiv Menon", "Anil Kulkarni", "Suresh Reddy",
+        "Amit Chatterjee", "Varun Bhatia", "Nikhil Desai", "Sameer Khanna",
+        "Harish Pillai", "Akash Banerjee", "Pranav Shah", "Deepak Mishra",
+        "Mohan Shetty", "Yash Agarwal",
+    ],
+    "Female": [
+        "Aanya Sharma", "Diya Patel", "Ananya Verma", "Meera Rao",
+        "Kavya Mehta", "Isha Singh", "Priya Gupta", "Nisha Malhotra",
+        "Riya Iyer", "Lakshmi Nair", "Pooja Joshi", "Saanvi Das",
+        "Neha Kapoor", "Anjali Menon", "Divya Kulkarni", "Sunita Reddy",
+        "Aditi Chatterjee", "Radhika Bhatia", "Sneha Desai", "Shreya Khanna",
+        "Gita Pillai", "Maya Banerjee", "Tara Shah", "Deepa Mishra",
+    ],
+}
 
 def create_patient_record(
     p_id, mrn, name, age, gender, dob, edu, handedness, apoe_str, apoe_cnt,
@@ -74,6 +93,21 @@ def create_patient_record(
         )
     }
 
+
+def assign_indian_demo_names(patients):
+    """Assign stable, unique Indian names to the fictional demo patients."""
+    counters = {gender: 0 for gender in INDIAN_DEMO_NAMES}
+    for patient in patients:
+        gender = patient["gender"]
+        if gender not in INDIAN_DEMO_NAMES:
+            raise ValueError(f"Unsupported patient gender for demo naming: {gender}")
+        index = counters[gender]
+        if index >= len(INDIAN_DEMO_NAMES[gender]):
+            raise ValueError(f"Not enough {gender.lower()} demo names.")
+        patient["name"] = INDIAN_DEMO_NAMES[gender][index]
+        counters[gender] += 1
+
+
 def generate_full_cohort():
     random.seed(42)
     patients = []
@@ -82,11 +116,11 @@ def generate_full_cohort():
     # 5 GOLDEN ARCHETYPES
     # =========================================================================
 
-    # 1. RAPID CONVERTER: Elena Rostova (MCI -> AD, High Amyloid, DMT Eligible)
+    # 1. RAPID CONVERTER (MCI -> AD, High Amyloid, DMT Eligible)
     p1 = create_patient_record(
         p_id="ADNI_082_S_5029",
         mrn="GE-ADNI-5029",
-        name="Elena Rostova",
+        name="Aanya Sharma",
         age=71,
         gender="Female",
         dob="1955-03-14",
@@ -155,11 +189,11 @@ def generate_full_cohort():
     )
     patients.append(p1)
 
-    # 2. WORRIED WELL / RULE-OUT: Arthur Pendelton (Stable Normal, Saves $4,700)
+    # 2. WORRIED WELL / RULE-OUT (Stable Normal, Saves $4,700)
     p2 = create_patient_record(
         p_id="ADNI_035_S_4410",
         mrn="GE-ADNI-4410",
-        name="Arthur Pendelton",
+        name="Aarav Sharma",
         age=66,
         gender="Male",
         dob="1960-11-20",
@@ -224,11 +258,11 @@ def generate_full_cohort():
     )
     patients.append(p2)
 
-    # 3. INDIAN DEMOGRAPHIC-CALIBRATED (LASI-DAD): Sunita Devi (Prevents False Misdiagnosis)
+    # 3. INDIAN DEMOGRAPHIC-CALIBRATED (LASI-DAD)
     p3 = create_patient_record(
         p_id="ADNI_IND_004_S_102",
         mrn="GE-LASI-0102",
-        name="Sunita Devi",
+        name="Diya Patel",
         age=64,
         gender="Female",
         dob="1962-07-04",
@@ -293,11 +327,11 @@ def generate_full_cohort():
     )
     patients.append(p3)
 
-    # 4. BORDERLINE GRAY ZONE: Clara Barton (Escalates to Stage 3 MRI for Clarity)
+    # 4. BORDERLINE GRAY ZONE (Escalates to Stage 3 MRI for Clarity)
     p4 = create_patient_record(
         p_id="ADNI_011_S_4209",
         mrn="GE-ADNI-4209",
-        name="Clara Barton",
+        name="Ananya Verma",
         age=68,
         gender="Female",
         dob="1958-04-18",
@@ -363,11 +397,11 @@ def generate_full_cohort():
     )
     patients.append(p4)
 
-    # 5. VASCULAR / MIXED PATHOLOGY: Rajesh K. Sharma (High WMH, Fazekas 3)
+    # 5. VASCULAR / MIXED PATHOLOGY (High WMH, Fazekas 3)
     p5 = create_patient_record(
         p_id="ADNI_098_S_6118",
         mrn="GE-ADNI-6118",
-        name="Rajesh K. Sharma",
+        name="Vivaan Patel",
         age=74,
         gender="Male",
         dob="1952-10-12",
@@ -644,6 +678,8 @@ def generate_full_cohort():
         )
         patients.append(p_rec)
 
+    assign_indian_demo_names(patients)
+
     # =========================================================================
     # WRITE TO JSON FILES
     # =========================================================================
@@ -711,11 +747,12 @@ def generate_full_cohort():
     # =========================================================================
     # POPULATE SQLITE DATABASE (stepwise.db)
     # =========================================================================
-    if DB_PATH.exists():
-        DB_PATH.unlink()
-    
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
+
+    # Rebuild only the demo clinical tables; retain local hospital accounts and sessions.
+    for table in ("stage_runs", "visits", "patients"):
+        cursor.execute(f"DROP TABLE IF EXISTS {table}")
 
     cursor.execute("""
     CREATE TABLE patients (

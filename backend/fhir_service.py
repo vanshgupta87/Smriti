@@ -1,5 +1,5 @@
 """
-StepWise: HL7 FHIR R4 ServiceRequest Generator & CDS Hooks Protocol
+Smriti: HL7 FHIR R4 ServiceRequest Generator & CDS Hooks Protocol
 Creates standardized JSON resources compliant with Epic/Cerner EHR specifications.
 """
 import uuid

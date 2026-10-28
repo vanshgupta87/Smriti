@@ -27,7 +27,7 @@ export default function RoiSimulator({
             Hospital Economic ROI & Diagnostic Scanner Capacity Sandbox
           </h3>
           <p className="text-xs text-[#565959] mt-0.5">
-            Simulate operational wait-time reduction, scanner capacity unlocks, and annual cost savings when replacing traditional direct referrals with StepWise staged gating
+            Simulate operational wait-time reduction, scanner capacity unlocks, and annual cost savings when replacing traditional direct referrals with Smriti staged gating
           </p>
         </div>
 

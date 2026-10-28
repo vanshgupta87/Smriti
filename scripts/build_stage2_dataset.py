@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-StepWise: Stage 2 Master Biofluid & Genomic Dataset Builder
+Smriti: Stage 2 Master Biofluid & Genomic Dataset Builder
 Harmonizes 7 multi-platform ADNI plasma assays via per-assay Z-scoring,
 cleans LOD sentinels, merges with Stage 1 clinical features and APOE-ε4 genotyping,
 and creates the 24-month progression dataset for Stage 2.
@@ -167,7 +167,7 @@ def load_blennow(ptid_map):
 
 def main():
     print("=" * 70)
-    print("STEPWISE: BUILDING STAGE 2 MULTIMODAL BIOFLUID & GENOMIC DATASET")
+    print("SMRITI: BUILDING STAGE 2 MULTIMODAL BIOFLUID & GENOMIC DATASET")
     print("=" * 70)
     
     # 1. Load Clean Stage 1 Feature Matrix

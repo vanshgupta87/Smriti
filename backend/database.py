@@ -43,14 +43,43 @@ def init_db():
     """)
 
     # Migrate existing patients table to add new columns if missing
-    try:
-        cursor.execute("ALTER TABLE patients ADD COLUMN patient_notes TEXT DEFAULT ''")
-    except:
-        pass
-    try:
-        cursor.execute("ALTER TABLE patients ADD COLUMN updated_at TEXT DEFAULT CURRENT_TIMESTAMP")
-    except:
-        pass
+    for col in [
+        "patient_notes TEXT DEFAULT ''",
+        "updated_at TEXT DEFAULT CURRENT_TIMESTAMP",
+        "stage1_json TEXT",
+        "stage2_json TEXT",
+        "stage3_json TEXT",
+        "stage4_json TEXT",
+        "status TEXT DEFAULT 'Active'",
+        "stage_name TEXT DEFAULT ''",
+        "cds_recommendation_json TEXT",
+        "email TEXT DEFAULT ''",
+        "phone TEXT DEFAULT ''",
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE patients ADD COLUMN {col}")
+        except:
+            pass
+
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS telemedicine_sessions (
+        room_id TEXT PRIMARY KEY,
+        patient_id TEXT,
+        patient_name TEXT,
+        patient_email TEXT,
+        doctor_name TEXT,
+        doctor_email TEXT,
+        call_reason TEXT,
+        custom_notes TEXT,
+        join_url TEXT,
+        email_sent INTEGER DEFAULT 1,
+        email_subject TEXT,
+        email_body_html TEXT,
+        status TEXT DEFAULT 'waiting_for_patient',
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        ended_at TEXT
+    );
+    ''')
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS visits (
@@ -121,11 +150,9 @@ def init_db():
 
     conn.commit()
 
-    # Seed from patients.json if table is empty
-    cursor.execute("SELECT COUNT(*) as count FROM patients")
-    if cursor.fetchone()["count"] == 0 and JSON_PATH.exists():
-        print(f"Seeding SQLite database from {JSON_PATH}...")
-        with open(JSON_PATH, "r") as f:
+    # Seed or synchronize from patients.json with correct current_stage and risk_score
+    if JSON_PATH.exists():
+        with open(JSON_PATH, "r", encoding="utf-8") as f:
             patients_data = json.load(f)
 
         for p in patients_data:
@@ -136,12 +163,34 @@ def init_db():
                 "smoking": False, "family_history": True, "anticoagulant": False
             })
 
+            # Properly extract stage and risk score respecting snake_case and camelCase
+            current_stage = p.get("current_stage") if p.get("current_stage") is not None else p.get("currentStage", 1)
+            risk_score = p.get("risk_score") if p.get("risk_score") is not None else p.get("riskScore", 0.35)
+
+            s1_json = json.dumps(p.get("stage1")) if p.get("stage1") else None
+            s2_json = json.dumps(p.get("stage2")) if p.get("stage2") else None
+            s3_json = json.dumps(p.get("stage3")) if p.get("stage3") else None
+            s4_json = json.dumps(p.get("stage4")) if p.get("stage4") else None
+            cds_json = json.dumps(p.get("cds_recommendation")) if p.get("cds_recommendation") else None
+
             cursor.execute("""
-            INSERT OR REPLACE INTO patients (
+            INSERT INTO patients (
                 id, mrn, name, age, gender, dob, education_years, apoe, referral, complaint,
                 patient_notes, primary_doctor, clinic_location, current_stage, risk_score,
-                velocity, vitals_json, medical_history_json, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                velocity, vitals_json, medical_history_json, created_at,
+                stage1_json, stage2_json, stage3_json, stage4_json, status, stage_name, cds_recommendation_json
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+                current_stage = excluded.current_stage,
+                risk_score = excluded.risk_score,
+                velocity = excluded.velocity,
+                stage1_json = COALESCE(patients.stage1_json, excluded.stage1_json),
+                stage2_json = COALESCE(patients.stage2_json, excluded.stage2_json),
+                stage3_json = COALESCE(patients.stage3_json, excluded.stage3_json),
+                stage4_json = COALESCE(patients.stage4_json, excluded.stage4_json),
+                status = excluded.status,
+                stage_name = excluded.stage_name,
+                cds_recommendation_json = excluded.cds_recommendation_json
             """, (
                 p_id,
                 p.get("mrn", f"GE-HC-{p_id}"),
@@ -156,63 +205,19 @@ def init_db():
                 p.get("patient_notes", ""),
                 p.get("primary_doctor", "Dr. Kenneth Adams, MD"),
                 p.get("clinic_location", "GE Healthcare Precision Neuro Center, Bay 3"),
-                p.get("currentStage", 1),
-                p.get("riskScore", 0.5),
+                current_stage,
+                risk_score,
                 p.get("velocity", "Moderate"),
                 json.dumps(p.get("vitals", {"bp": "128/82 mmHg", "pulse": 72, "bmi": 24.5})),
                 json.dumps(med_hist),
-                p.get("created_at", "2024-09-12 09:00:00")
+                p.get("created_at", "2024-09-12 09:00:00"),
+                s1_json, s2_json, s3_json, s4_json,
+                p.get("status", "Active"),
+                p.get("stage_name", f"Stage {current_stage}"),
+                cds_json
             ))
-
-            s1 = p.get("stage1", {})
-            s2 = p.get("stage2", {})
-            s3 = p.get("stage3", {})
-            s4 = p.get("stage4", {})
-
-            cursor.execute("""
-            INSERT INTO visits (
-                patient_id, visit_code, visit_date, stage_number, mmse, moca, cdrsb, faq,
-                ptau217, ab42_40, nfl, gfap,
-                hippocampus_cm3, ventricles_cm3, mta_grade,
-                centiloids, tau_suvr, microbleeds, risk_score, stage_dx, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                p_id, "M00", "2024-09-12", 1,
-                s1.get("mmse", 24), s1.get("moca", 22), s1.get("cdrsb", 1.5), s1.get("faq", 4.0),
-                s2.get("ptau217", 0.24), s2.get("ab42_40", 0.088), s2.get("nfl", 14.2), s2.get("gfap", 187.0),
-                s3.get("hippoVol", 3.82), 42.1, s3.get("mtaGrade", "MTA Grade 2"),
-                s4.get("centiloids", 78.4), 1.48, 0,
-                p.get("riskScore", 0.5),
-                f"Stage {p.get('currentStage', 1)} Active",
-                "2024-09-12 09:00:00"
-            ))
-
-            if p.get("velocity") in ["High Velocity", "Rapid Converter", "Rapid Converter (ΔMMSE -3.5/yr)"]:
-                cursor.execute("""
-                INSERT INTO visits (
-                    patient_id, visit_code, visit_date, stage_number, mmse, moca, cdrsb, faq,
-                    ptau217, ab42_40, nfl, gfap,
-                    hippocampus_cm3, ventricles_cm3, mta_grade,
-                    centiloids, tau_suvr, microbleeds, risk_score, stage_dx, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    p_id, "M12", "2025-09-15", p.get("currentStage", 1),
-                    max(10, (s1.get("mmse") or 24) - 2), max(8, (s1.get("moca") or 22) - 2),
-                    (s1.get("cdrsb") or 1.5) + 0.5, (s1.get("faq") or 4.0) + 2.0,
-                    round((s2.get("ptau217") or 0.24) * 1.25, 2),
-                    round((s2.get("ab42_40") or 0.088) * 0.90, 3),
-                    round((s2.get("nfl") or 14.2) * 1.18, 1),
-                    round((s2.get("gfap") or 187.0) * 1.10, 1),
-                    round((s3.get("hippoVol") or 3.82) * 0.92, 2),
-                    round(42.1 * 1.10, 1), s3.get("mtaGrade", "MTA Grade 2"),
-                    round((s4.get("centiloids") or 78.4) * 1.10, 1), 1.55, 0,
-                    min(0.98, (p.get("riskScore") or 0.5) + 0.12),
-                    "M12 Revisit: Disease Progression",
-                    "2025-09-15 09:00:00"
-                ))
 
         conn.commit()
-        print(f"Successfully seeded ADNI patients into stepwise.db!")
 
     # Ensure every patient has complete historical stage visits up to their current_stage
     reseed_all_patient_visits_db(conn)
@@ -330,6 +335,13 @@ def _build_patient_dict(r, cursor):
     p_dict["currentStage"] = p_dict["current_stage"]
     p_dict["riskScore"] = p_dict["risk_score"]
     p_dict["patient_notes"] = p_dict.get("patient_notes") or ""
+    email = p_dict.get("email")
+    if not email:
+        raw_name = p_dict.get("name", "patient").lower()
+        cleaned = "".join(c if c.isalnum() else "." for c in raw_name).strip(".")
+        email = f"{cleaned}@healthmail.org"
+    p_dict["email"] = email
+    p_dict["phone"] = p_dict.get("phone") or "+1 (555) 382-9014"
 
     # Get all visits ordered by date
     pid = p_dict["id"]
@@ -386,15 +398,25 @@ def _build_patient_dict(r, cursor):
                 "plasma_ab42_40": s2_json.get("plasma_ab42_40"),
                 "plasma_nfl": s2_json.get("plasma_nfl"),
                 "plasma_gfap": s2_json.get("plasma_gfap"),
+                "plasma_ptau217_z": s2_json.get("plasma_ptau217_z"),
+                "plasma_ab42_40_z": s2_json.get("plasma_ab42_40_z"),
+                "plasma_nfl_z": s2_json.get("plasma_nfl_z"),
+                "plasma_gfap_z": s2_json.get("plasma_gfap_z"),
                 "riskScorePct": s2_json.get("riskScorePct") or int(p_dict["risk_score"] * 100),
                 "assessment": s2_json.get("assessment") or {}
             }
         elif s2v:
+            assessment = json.loads(s2v.get("stage_assessment_json") or "{}")
+            measured_inputs = assessment.get("measured_inputs") or {}
             p_dict["stage2"] = {
                 "plasma_ptau217": s2v.get("ptau217"), "plasma_ab42_40": s2v.get("ab42_40"),
                 "plasma_nfl": s2v.get("nfl"), "plasma_gfap": s2v.get("gfap"),
+                "plasma_ptau217_z": measured_inputs.get("plasma_ptau217_z"),
+                "plasma_ab42_40_z": measured_inputs.get("plasma_ab42_40_z"),
+                "plasma_nfl_z": measured_inputs.get("plasma_nfl_z"),
+                "plasma_gfap_z": measured_inputs.get("plasma_gfap_z"),
                 "riskScorePct": int((s2v.get("risk_score") or p_dict["risk_score"]) * 100),
-                "assessment": json.loads(s2v.get("stage_assessment_json") or "{}")
+                "assessment": assessment
             }
         else:
             p_dict["stage2"] = None
@@ -525,7 +547,7 @@ def insert_new_patient_db(patient_data):
     INSERT INTO patients (
         id, mrn, name, age, gender, dob, education_years, apoe, referral, complaint,
         patient_notes, primary_doctor, clinic_location, current_stage, risk_score,
-        velocity, vitals_json, med_history_json, created_at
+        velocity, vitals_json, medical_history_json, created_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         p_id, mrn,
@@ -672,7 +694,7 @@ def get_patient_timeline_db(patient_id):
         "timestamp": reg_time,
         "display_date": str(reg_time)[:10],
         "title": "Patient Registered",
-        "detail": f"{p['name']} enrolled in StepWise PRO system",
+        "detail": f"{p['name']} enrolled in Smriti",
         "icon": "user-plus",
         "color": "blue",
         "can_delete": False,

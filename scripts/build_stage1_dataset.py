@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-StepWise: Stage 1 Master Dataset Builder
+Smriti: Stage 1 Master Dataset Builder
 Ingests raw ADNI core tables and produces the clean Stage 1 multimodal feature matrix
 with 24-month longitudinal progression ground truth.
 """
@@ -303,7 +303,7 @@ def build_progression_target(df):
 
 def main():
     print("=" * 70)
-    print("STEPWISE: BUILDING STAGE 1 COMPREHENSIVE SCREENING DATASET")
+    print("SMRITI: BUILDING STAGE 1 COMPREHENSIVE SCREENING DATASET")
     print("=" * 70)
     
     # 1. Load Ground Truth First
@@ -343,7 +343,7 @@ def main():
     
     # 4. Build 24-Month Progression Target
     master = build_progression_target(master)
-    
+
     # Filter to eligible training rows (where 24-month progression status is determinable)
     trainable = master[master["Progression24m"].notna()].copy()
     trainable["Progression24m"] = trainable["Progression24m"].astype(int)

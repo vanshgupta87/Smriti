@@ -27,12 +27,15 @@ yarn-error.log*
 # Large Raw Datasets (Keeps GitHub lightweight)
 Dataset/
 data/raw/
+data/processed/stage*.parquet
+*.tsbuildinfo
 *.nii
 *.nii.gz
 *.dcm
 *.zip
 *.tar.gz
 stepwise.db
+data/processed/current_status_diagnosis.*
 
 # Model weights & trained artifacts (PROTECTED)
 *.pth

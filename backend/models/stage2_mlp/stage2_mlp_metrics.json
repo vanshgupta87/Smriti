@@ -1,0 +1,86 @@
+{
+  "stage": 2,
+  "model_architecture": "MLP(Linear(128)->BatchNorm->ReLU->Dropout(0.3)->Linear(64)->BatchNorm->ReLU->Dropout(0.2)->Linear(1))",
+  "mean_cv_roc_auc": 0.8104159787462051,
+  "std_cv_roc_auc": 0.022119598072474083,
+  "cv_folds": [
+    {
+      "fold": 1,
+      "ROC_AUC": 0.8209700859876469,
+      "PR_AUC": 0.47025774277114435
+    },
+    {
+      "fold": 2,
+      "ROC_AUC": 0.7767074921124968,
+      "PR_AUC": 0.36333549141169674
+    },
+    {
+      "fold": 3,
+      "ROC_AUC": 0.8421195265550578,
+      "PR_AUC": 0.4967282397724208
+    },
+    {
+      "fold": 4,
+      "ROC_AUC": 0.815003469906144,
+      "PR_AUC": 0.49338783813449183
+    },
+    {
+      "fold": 5,
+      "ROC_AUC": 0.7972793191696795,
+      "PR_AUC": 0.3883470347168425
+    }
+  ],
+  "test_roc_auc": 0.6727423363711682,
+  "test_pr_auc": 0.2080193818167196,
+  "test_brier_loss": 0.06963469088077545,
+  "optimal_threshold": 0.22859668731689453,
+  "sensitivity": 0.5588235294117647,
+  "specificity": 0.8415492957746479,
+  "confusion_matrix": [
+    [
+      478,
+      90
+    ],
+    [
+      15,
+      19
+    ]
+  ],
+  "top_k_prioritization": [
+    {
+      "queue": "Top 5%",
+      "patients": 31,
+      "progressors_captured": 11,
+      "capture_recall": 0.3235294117647059,
+      "precision": 0.3548387096774194
+    },
+    {
+      "queue": "Top 10%",
+      "patients": 61,
+      "progressors_captured": 15,
+      "capture_recall": 0.4411764705882353,
+      "precision": 0.2459016393442623
+    },
+    {
+      "queue": "Top 20%",
+      "patients": 121,
+      "progressors_captured": 19,
+      "capture_recall": 0.5588235294117647,
+      "precision": 0.15702479338842976
+    },
+    {
+      "queue": "Top 30%",
+      "patients": 181,
+      "progressors_captured": 20,
+      "capture_recall": 0.5882352941176471,
+      "precision": 0.11049723756906077
+    },
+    {
+      "queue": "Top 50%",
+      "patients": 301,
+      "progressors_captured": 22,
+      "capture_recall": 0.6470588235294118,
+      "precision": 0.07308970099667775
+    }
+  ]
+}

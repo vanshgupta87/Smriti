@@ -48,7 +48,7 @@ export default function DynamicLab({
               Dynamic Diagnostic Feature Playground (Native NaN Ingestion)
             </h3>
             <p className="text-xs text-[#565959] mt-0.5">
-              Select available clinical tests using checkboxes. Unchecked features are automatically passed as <code className="bg-[#EAEDED] px-1 rounded font-mono text-[#B12704]">NaN</code> to test XGBoost native missing-value split routing without defaulting to zero.
+              Select available clinical tests using checkboxes. Unchecked features are automatically passed as <code className="bg-[#EAEDED] px-1 rounded font-mono text-[#B12704]">NaN</code> to test model missing-value robustness without defaulting to zero.
             </p>
           </div>
 
@@ -203,7 +203,7 @@ export default function DynamicLab({
           className="aws-btn-primary w-full py-3 rounded-md text-xs font-extrabold shadow-sm flex items-center justify-center gap-2 mt-4 transition"
         >
           <Zap className="w-4 h-4" />
-          <span>{labLoading ? 'Evaluating Native XGBoost NaN Decision Paths...' : 'Execute Dynamic Dual-Head Model Inference'}</span>
+          <span>{labLoading ? 'Evaluating Model Inference...' : 'Execute Dynamic Model Inference'}</span>
         </button>
 
         {/* Dual-Head Output Result Card */}

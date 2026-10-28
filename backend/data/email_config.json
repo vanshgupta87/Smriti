@@ -1,0 +1,8 @@
+{
+  "smtp_host": "smtp.gmail.com",
+  "smtp_port": 587,
+  "smtp_user": "vijaygupta0718@gmail.com",
+  "smtp_password": "mdsozegidoqmxciv",
+  "sender_email": "vijaygupta0718@gmail.com",
+  "sender_name": "Dr. Vansh Gupta - Smriti TeleHealth"
+}

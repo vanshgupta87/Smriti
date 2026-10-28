@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
+#ML part from line 300 starts
 """
-StepWise PRO: Enterprise FastAPI Clinical Decision Support Engine v3.0
-GE Healthcare Precision Care Challenge 2026 (Grand Finale, Bangalore)
+Smriti: Enterprise FastAPI Clinical Decision Support Engine v3.0
 """
 
 import os
@@ -10,33 +10,25 @@ import json
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from typing import List, Optional, Dict, Any
-from fastapi import FastAPI, HTTPException, Query, Body, File, UploadFile
+from typing import Optional, Dict, Any, Literal
+from fastapi import FastAPI, HTTPException, Query, Body, File, UploadFile, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 import joblib
-import io
+import torch
+import torch.nn as nn
 from PIL import Image
-
-try:
-    from backend.vision_engine import (
-        run_mri_model_inference,
-        run_pet_model_inference,
-        generate_anatomical_mri,
-        parse_dicom_bytes,
-        parse_zip_dicom_bytes
-    )
-    VISION_ENGINE_AVAILABLE = True
-except Exception as e:
-    print("Warning: Vision engine failed to import:", e)
-    VISION_ENGINE_AVAILABLE = False
+import io
+import re
+import base64
+import cv2
+from datetime import timedelta
 
 from backend.lab_parser import (
     extract_text_from_pdf_bytes,
     parse_clinical_report_text
 )
-
 from backend.database import (
     init_db,
     fetch_all_patients_db,
@@ -51,79 +43,388 @@ from backend.database import (
     get_analytics_db,
     get_db
 )
+from backend.auth_service import (
+    InvalidCredentials,
+    LoginRateLimited,
+    WorkspaceAlreadyConfigured,
+    authenticate,
+    create_first_hospital_account,
+    get_session_user,
+    init_auth_db,
+    revoke_session,
+    workspace_is_configured,
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "backend" / "data"
 MODELS_DIR = BASE_DIR / "backend" / "models"
 
 init_db()
+init_auth_db()
 
 app = FastAPI(
-    title="StepWise PRO CDS Engine",
-    description="GE Healthcare Precision Care 4-Stage Multimodal Triage Architecture",
+    title="Smriti Research Engine",
+    description="Four-stage tabular progression research prototype; not for clinical use.",
     version="3.0.0"
 )
 
+SESSION_COOKIE_NAME = "smriti_session"
+SESSION_COOKIE_SECURE = os.getenv("SMRITI_COOKIE_SECURE", "").lower() in {
+    "1",
+    "true",
+    "yes",
+}
+AUTH_ALLOWED_ORIGINS = {
+    origin.strip().rstrip("/")
+    for origin in os.getenv(
+        "SMRITI_ALLOWED_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000",
+    ).split(",")
+    if origin.strip()
+}
+import socket
+try:
+    _lan_ip = socket.gethostbyname(socket.gethostname())
+    if _lan_ip and not _lan_ip.startswith("127."):
+        AUTH_ALLOWED_ORIGINS.add(f"http://{_lan_ip}:3000")
+        AUTH_ALLOWED_ORIGINS.add(f"http://{_lan_ip}:8000")
+except Exception:
+    pass
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=sorted(AUTH_ALLOWED_ORIGINS),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+
+@app.middleware("http")
+async def require_authenticated_hospital(request: Request, call_next):
+    path = request.url.path
+    is_auth_route = path.startswith("/api/auth/")
+    is_health_route = path == "/api/health"
+    is_public_telemed = path.startswith("/api/telemedicine/public/")
+
+    if (
+        path.startswith("/api/")
+        and request.method not in {"GET", "HEAD", "OPTIONS"}
+        and not is_public_telemed
+    ):
+        origin = request.headers.get("origin")
+        if not origin or origin.rstrip("/") not in AUTH_ALLOWED_ORIGINS:
+            return JSONResponse(
+                status_code=403,
+                content={"detail": "A trusted request origin is required."},
+            )
+
+    if path.startswith("/api/") and not is_auth_route and not is_health_route and not is_public_telemed:
+        user = get_session_user(request.cookies.get(SESSION_COOKIE_NAME))
+        if user is None:
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "Hospital sign-in is required."},
+            )
+        request.state.auth_user = user
+
+    response = await call_next(request)
+    response.headers.setdefault("Cache-Control", "no-store")
+    return response
+
+
+def set_session_cookie(response: Response, token: str) -> None:
+    response.set_cookie(
+        key=SESSION_COOKIE_NAME,
+        value=token,
+        max_age=int(timedelta(hours=8).total_seconds()),
+        httponly=True,
+        secure=SESSION_COOKIE_SECURE,
+        samesite="strict",
+        path="/",
+    )
+
+
+class HospitalSignupRequest(BaseModel):
+    organization: str = Field(..., min_length=2, max_length=160)
+    full_name: str = Field(..., min_length=2, max_length=120)
+    role: Literal["physician", "administrator", "researcher", "it", "other"]
+    email: str = Field(..., min_length=5, max_length=254)
+    password: str = Field(..., min_length=12, max_length=256)
+
+    @field_validator("organization", "full_name")
+    @classmethod
+    def validate_required_names(cls, value: str) -> str:
+        normalized = value.strip()
+        if len(normalized) < 2:
+            raise ValueError("Enter at least two characters.")
+        return normalized
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str) -> str:
+        normalized = value.strip().lower()
+        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", normalized):
+            raise ValueError("Enter a valid work email address.")
+        return normalized
+
+
+class HospitalLoginRequest(BaseModel):
+    email: str = Field(..., min_length=5, max_length=254)
+    password: str = Field(..., min_length=1, max_length=256)
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str) -> str:
+        normalized = value.strip().lower()
+        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", normalized):
+            raise ValueError("Enter a valid email address.")
+        return normalized
+
+
+@app.get("/api/auth/status")
+def auth_status(request: Request):
+    return {
+        "workspace_configured": workspace_is_configured(),
+        "user": get_session_user(request.cookies.get(SESSION_COOKIE_NAME)),
+    }
+
+
+@app.post("/api/auth/signup", status_code=201)
+def hospital_signup(payload: HospitalSignupRequest, response: Response):
+    try:
+        token, user = create_first_hospital_account(
+            organization=payload.organization,
+            full_name=payload.full_name,
+            email=payload.email,
+            role=payload.role,
+            password=payload.password,
+        )
+    except WorkspaceAlreadyConfigured:
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                "This installation already has a hospital workspace. "
+                "Additional user invitations are not configured."
+            ),
+        )
+    set_session_cookie(response, token)
+    return {"user": user}
+
+
+@app.post("/api/auth/login")
+def hospital_login(
+    payload: HospitalLoginRequest,
+    request: Request,
+    response: Response,
+):
+    client_ip = request.client.host if request.client else "unknown"
+    try:
+        token, user = authenticate(payload.email, payload.password, client_ip)
+    except LoginRateLimited:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many sign-in attempts. Try again in 15 minutes.",
+            headers={"Retry-After": "900"},
+        )
+    except InvalidCredentials:
+        raise HTTPException(status_code=401, detail="Email or password is incorrect.")
+    set_session_cookie(response, token)
+    return {"user": user}
+
+
+@app.get("/api/auth/me")
+def hospital_session(request: Request):
+    user = get_session_user(request.cookies.get(SESSION_COOKIE_NAME))
+    if user is None:
+        raise HTTPException(status_code=401, detail="Hospital sign-in is required.")
+    return {"user": user}
+
+
+@app.post("/api/auth/logout")
+def hospital_logout(request: Request, response: Response):
+    revoke_session(request.cookies.get(SESSION_COOKIE_NAME))
+    response.delete_cookie(
+        key=SESSION_COOKIE_NAME,
+        httponly=True,
+        secure=SESSION_COOKIE_SECURE,
+        samesite="strict",
+        path="/",
+    )
+    return {"status": "signed_out"}
+
+
 MODELS = {}
 CALIBRATORS = {}
 FEATURE_LISTS = {}
+STAGE_THRESHOLDS = {}
+STAGE_MODEL_ERRORS = {}
 
 for stage_idx in [1, 2, 3, 4]:
     s_dir = MODELS_DIR / f"stage{stage_idx}"
     try:
-        if (s_dir / f"stage{stage_idx}_xgboost_model.joblib").exists():
-            MODELS[stage_idx] = joblib.load(s_dir / f"stage{stage_idx}_xgboost_model.joblib")
-            CALIBRATORS[stage_idx] = joblib.load(s_dir / f"stage{stage_idx}_calibrator.joblib")
-            with open(s_dir / f"stage{stage_idx}_feature_list.json") as f:
-                FEATURE_LISTS[stage_idx] = json.load(f)
-            print(f"Loaded Stage {stage_idx} Calibrated Model ({len(FEATURE_LISTS[stage_idx])} features)")
+        artifact_paths = {
+            "model": s_dir / f"stage{stage_idx}_xgboost_model.joblib",
+            "calibrator": s_dir / f"stage{stage_idx}_calibrator.joblib",
+            "features": s_dir / f"stage{stage_idx}_feature_list.json",
+            "threshold": s_dir / f"stage{stage_idx}_optimal_threshold.json",
+        }
+        missing_artifacts = [
+            str(path) for path in artifact_paths.values() if not path.is_file()
+        ]
+        if missing_artifacts:
+            raise FileNotFoundError(
+                "Missing trained model artifacts: " + ", ".join(missing_artifacts)
+            )
+
+        model = joblib.load(artifact_paths["model"])
+        calibrator = joblib.load(artifact_paths["calibrator"])
+        with artifact_paths["features"].open(encoding="utf-8") as feature_file:
+            feature_list = json.load(feature_file)
+        with artifact_paths["threshold"].open(encoding="utf-8") as threshold_file:
+            threshold_config = json.load(threshold_file)
+        threshold = float(threshold_config["optimal_threshold"])
+        if not isinstance(feature_list, list) or not feature_list:
+            raise ValueError("Model feature list must be a non-empty array.")
+        if not 0.0 <= threshold <= 1.0:
+            raise ValueError("Model decision threshold must be between 0 and 1.")
+
+        MODELS[stage_idx] = model
+        CALIBRATORS[stage_idx] = calibrator
+        FEATURE_LISTS[stage_idx] = feature_list
+        STAGE_THRESHOLDS[stage_idx] = threshold
+        print(f"Loaded Stage {stage_idx} Calibrated Model ({len(feature_list)} features)")
     except Exception as e:
+        STAGE_MODEL_ERRORS[stage_idx] = str(e)
         print(f"Warning: Failed to load Stage {stage_idx} model: {e}")
 
+# =====================================================================
+# STAGE 1-4 MLP DEEP LEARNING MODELS
+# =====================================================================
+
+class ProgressionMLP(nn.Module):
+    def __init__(self, in_features: int, hidden_dim1: int = 128, hidden_dim2: int = 64, dropout_rate: float = 0.3):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_features, hidden_dim1),
+            nn.BatchNorm1d(hidden_dim1),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
+            nn.Linear(hidden_dim1, hidden_dim2),
+            nn.BatchNorm1d(hidden_dim2),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate * 0.7),
+            nn.Linear(hidden_dim2, 1)
+        )
+    
+    def forward(self, x):
+        return self.net(x).squeeze(-1)
+
+MLP_MODELS = {}
+MLP_PREPROCESSORS = {}
+MLP_THRESHOLDS = {}
+MLP_METRICS = {}
+MLP_MODEL_ERRORS = {}
+
+for stage_idx in [1, 2, 3, 4]:
+    s_mlp_dir = MODELS_DIR / f"stage{stage_idx}_mlp"
+    try:
+        model_path = s_mlp_dir / f"stage{stage_idx}_mlp_model.pt"
+        prep_path = s_mlp_dir / f"stage{stage_idx}_preprocessor.joblib"
+        thresh_path = s_mlp_dir / f"stage{stage_idx}_optimal_threshold.json"
+        metrics_path = s_mlp_dir / f"stage{stage_idx}_mlp_metrics.json"
+
+        if not (model_path.is_file() and prep_path.is_file() and thresh_path.is_file()):
+            raise FileNotFoundError(f"Missing MLP artifacts for stage {stage_idx}")
+
+        with thresh_path.open(encoding="utf-8") as f:
+            t_data = json.load(f)
+        threshold = float(t_data.get("optimal_threshold", 0.5))
+
+        preprocessor = joblib.load(prep_path)
+        feature_count = len(FEATURE_LISTS.get(stage_idx, []))
+        if feature_count == 0:
+            feat_file = s_mlp_dir / f"stage{stage_idx}_feature_list.json"
+            if feat_file.is_file():
+                with feat_file.open(encoding="utf-8") as f:
+                    feature_count = len(json.load(f))
+
+        mlp = ProgressionMLP(in_features=feature_count)
+        mlp.load_state_dict(torch.load(model_path, map_location="cpu", weights_only=True))
+        mlp.eval()
+
+        metrics = {}
+        if metrics_path.is_file():
+            with metrics_path.open(encoding="utf-8") as f:
+                metrics = json.load(f)
+
+        MLP_MODELS[stage_idx] = mlp
+        MLP_PREPROCESSORS[stage_idx] = preprocessor
+        MLP_THRESHOLDS[stage_idx] = threshold
+        MLP_METRICS[stage_idx] = metrics
+        print(f"Loaded Stage {stage_idx} MLP Model ({feature_count} features, threshold={threshold:.4f})")
+    except Exception as e:
+        MLP_MODEL_ERRORS[stage_idx] = str(e)
+        print(f"Warning: Failed to load Stage {stage_idx} MLP model: {e}")
+
+# =====================================================================
+#  YOLOV8 BRAIN TUMOR DETECTION MODELS
+# =====================================================================
+
+TUMOR_MODELS = {}
+TUMOR_MODEL_ERRORS = {}
+try:
+    from ultralytics import YOLO
+    tumor_dir = MODELS_DIR / "tumor_yolo"
+    for variant in ["yolov8n.pt", "yolov8m.pt"]:
+        w_path = tumor_dir / variant
+        if w_path.is_file():
+            v_name = "nano" if "n" in variant else "medium"
+            TUMOR_MODELS[v_name] = YOLO(str(w_path))
+            print(f"Loaded NeuroSight YOLOv8 {v_name.capitalize()} Tumor Detector")
+        else:
+            print(f"YOLO tumor weight not found: {w_path}")
+except Exception as e:
+    TUMOR_MODEL_ERRORS["load_error"] = str(e)
+    print(f"Warning: Could not initialize YOLO tumor models: {e}")
 
 # =====================================================================
 # PYDANTIC SCHEMAS
 # =====================================================================
 
 class CognitiveInput(BaseModel):
-    mmse: Optional[float] = Field(None)
-    moca: Optional[float] = Field(None)
-    cdrsb: Optional[float] = Field(None)
-    faq: Optional[float] = Field(None)
-    adas13: Optional[float] = Field(None)
-    gds: Optional[float] = Field(None)
-    age: float = Field(72.0)
-    gender: str = Field("Female")
-    education_years: float = Field(14.0)
-    has_diabetes: bool = Field(False)
-    has_hypertension: bool = Field(False)
+    mmse: Optional[float] = Field(None, ge=0, le=30)
+    moca: Optional[float] = Field(None, ge=0, le=30)
+    cdrsb: Optional[float] = Field(None, ge=0, le=18)
+    faq: Optional[float] = Field(None, ge=0, le=30)
+    adas13: Optional[float] = Field(None, ge=0, le=85)
+    gds: Optional[float] = Field(None, ge=0, le=15)
+    age: Optional[float] = Field(None, ge=18, le=120)
+    gender: Optional[str] = Field(None)
+    education_years: Optional[float] = Field(None, ge=0, le=40)
+    has_diabetes: Optional[bool] = Field(None)
+    has_hypertension: Optional[bool] = Field(None)
 
 
 class DynamicTriageRequest(BaseModel):
     patient_id: Optional[str] = "DEMO-CASE-01"
-    stage: int = Field(1)
+    stage: int = Field(1, ge=1, le=4)
     cognitive: CognitiveInput
-    apoe4_count: Optional[int] = Field(None)
-    plasma_ptau217: Optional[float] = Field(None)
-    plasma_ab42_40: Optional[float] = Field(None)
-    plasma_nfl: Optional[float] = Field(None)
-    plasma_gfap: Optional[float] = Field(None)
-    hippocampus_icv_ratio: Optional[float] = Field(None)
-    hippocampus_cm3: Optional[float] = Field(None)
-    ventricles_cm3: Optional[float] = Field(None)
-    wmh_volume_cm3: Optional[float] = Field(None)
+    apoe4_count: Optional[int] = Field(None, ge=0, le=2)
+    plasma_ptau217_z: Optional[float] = Field(None, ge=-20, le=20)
+    plasma_ab42_40_z: Optional[float] = Field(None, ge=-20, le=20)
+    plasma_nfl_z: Optional[float] = Field(None, ge=-20, le=20)
+    plasma_gfap_z: Optional[float] = Field(None, ge=-20, le=20)
+    hippocampus_icv_ratio: Optional[float] = Field(None, ge=0, le=100)
+    hippocampus_cm3: Optional[float] = Field(None, ge=0, le=20)
+    ventricles_cm3: Optional[float] = Field(None, ge=0, le=500)
+    icv_cm3: Optional[float] = Field(None, gt=0, le=3000)
+    ventricles_icv_ratio: Optional[float] = Field(None, ge=0, le=1)
+    wmh_volume_cm3: Optional[float] = Field(None, ge=0, le=500)
     mta_grade: Optional[str] = Field(None)
-    centiloids: Optional[float] = Field(None)
-    tau_suvr: Optional[float] = Field(None)
-    microbleeds: Optional[int] = Field(None)
+    centiloids: Optional[float] = Field(None, ge=-100, le=500)
+    tau_suvr: Optional[float] = Field(None, ge=0, le=10)
+    microbleeds: Optional[int] = Field(None, ge=0)
     apply_india_calibration: bool = Field(False)
     save_to_patient: bool = Field(False)
 
@@ -208,10 +509,50 @@ def apply_lasidad_calibration(feat_dict: Dict[str, Any], cog: CognitiveInput) ->
 def health_check():
     return {
         "status": "healthy",
-        "service": "StepWise PRO CDS Engine v3.0",
+        "service": "Smriti Research Engine",
         "loaded_stages": list(MODELS.keys()),
-        "vision_engine_active": VISION_ENGINE_AVAILABLE,
-        "india_lasidad_active": True
+        "stage_models_active": len(MODELS),
+        "mlp_stages_active": len(MLP_MODELS),
+        "tumor_models_active": list(TUMOR_MODELS.keys()),
+        "india_lasidad_active": False
+    }
+
+
+@app.get("/api/triage/stages")
+def triage_stage_status():
+    descriptions = {
+        1: ("Cognitive and clinical progression model", "Clinical / cognitive data"),
+        2: ("Blood biomarker progression model", "Clinical data and blood biomarkers"),
+        3: ("MRI-derived feature progression model", "Clinical data and measured MRI features"),
+        4: ("PET-derived feature progression model", "Clinical data and measured PET features"),
+    }
+    return {
+        "stages": [
+            {
+                "stage": stage,
+                "name": descriptions[stage][0],
+                "required_inputs": descriptions[stage][1],
+                "model_loaded": stage in MODELS,
+                "calibrator_loaded": stage in CALIBRATORS,
+                "threshold_loaded": stage in STAGE_THRESHOLDS,
+                "mlp_loaded": stage in MLP_MODELS,
+                "mlp_threshold_loaded": stage in MLP_THRESHOLDS,
+                "mlp_metrics": MLP_METRICS.get(stage),
+                "error": (
+                    None if stage in MODELS else
+                    "Trained stage artifacts are missing or failed validation. "
+                    "Prepare the cohort, train this stage, and restart the backend."
+                ),
+            }
+            for stage in range(1, 5)
+        ],
+        "tumor_models": {
+            "loaded_variants": list(TUMOR_MODELS.keys()),
+            "classes": ["glioma", "meningioma", "pituitary"] if TUMOR_MODELS else []
+        },
+        "clinical_use": (
+            "Research prototype only; outputs are not diagnoses or clinical recommendations."
+        ),
     }
 
 
@@ -487,9 +828,22 @@ def get_analytics():
 
 @app.post("/api/triage/predict")
 def predict_triage(req: DynamicTriageRequest):
+    if req.apply_india_calibration:
+        raise HTTPException(
+            status_code=422,
+            detail="India-specific calibration is not validated or available for these models.",
+        )
     stage = req.stage
     if stage not in MODELS:
-        raise HTTPException(status_code=400, detail=f"Model for Stage {stage} is not loaded")
+        if stage not in range(1, 5):
+            raise HTTPException(status_code=422, detail="stage must be between 1 and 4.")
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"Stage {stage} progression model is not available. "
+                "Check GET /api/triage/stages for its status."
+            ),
+        )
 
     # If patient exists in DB, fetch historical data to backfill missing prior-stage features
     p_db = fetch_patient_by_id_db(req.patient_id) if req.patient_id else None
@@ -500,19 +854,21 @@ def predict_triage(req: DynamicTriageRequest):
 
     feat_dict = {}
     
-    # Demographics & Clinical Baseline
-    age_val = req.cognitive.age if req.cognitive.age is not None else (p_db.get("age") if p_db else 72.0)
-    gender_str = req.cognitive.gender if req.cognitive.gender else (p_db.get("gender") if p_db else "Female")
-    edu_val = req.cognitive.education_years if req.cognitive.education_years is not None else (p_db.get("education_years") if p_db else 14.0)
+    # Missing measurements stay missing; do not fabricate a normal/default patient.
+    age_val = req.cognitive.age if req.cognitive.age is not None else (p_db.get("age") if p_db else None)
+    gender_str = req.cognitive.gender or (p_db.get("gender") if p_db else None)
+    edu_val = req.cognitive.education_years if req.cognitive.education_years is not None else (p_db.get("education_years") if p_db else None)
+    medical_history = (p_db.get("medical_history") if p_db else None) or {}
 
-    feat_dict["AGE"] = float(age_val)
-    feat_dict["PTGENDER"] = 2 if str(gender_str).lower() == "female" else 1
-    feat_dict["PTEDUCAT"] = float(edu_val)
-    feat_dict["PTMARRY"] = 1.0
+    feat_dict["AGE"] = float(age_val) if age_val is not None else np.nan
+    gender = str(gender_str).lower() if gender_str else ""
+    feat_dict["PTGENDER"] = 1.0 if gender == "female" else (0.0 if gender == "male" else np.nan)
+    feat_dict["PTEDUCAT"] = float(edu_val) if edu_val is not None else np.nan
+    feat_dict["PTMARRY"] = np.nan
 
     # Stage 1: Cognitive features (with historical backfill)
-    mmse_val = req.cognitive.mmse if req.cognitive.mmse is not None else (s1_db.get("mmse") or s1_db.get("moca"))
-    moca_val = req.cognitive.moca if req.cognitive.moca is not None else (s1_db.get("moca") or s1_db.get("mmse"))
+    mmse_val = req.cognitive.mmse if req.cognitive.mmse is not None else s1_db.get("mmse")
+    moca_val = req.cognitive.moca if req.cognitive.moca is not None else s1_db.get("moca")
     cdrsb_val = req.cognitive.cdrsb if req.cognitive.cdrsb is not None else s1_db.get("cdrsb")
     faq_val = req.cognitive.faq if req.cognitive.faq is not None else s1_db.get("faq")
     adas_val = req.cognitive.adas13 if req.cognitive.adas13 is not None else s1_db.get("adas13")
@@ -523,177 +879,122 @@ def predict_triage(req: DynamicTriageRequest):
     feat_dict["CDRSB"] = float(cdrsb_val) if cdrsb_val is not None else np.nan
     feat_dict["FAQTOTAL"] = float(faq_val) if faq_val is not None else np.nan
     feat_dict["ADAS13"] = float(adas_val) if adas_val is not None else np.nan
+    feat_dict["GDS"] = float(gds_val) if gds_val is not None else np.nan
 
-    if mmse_val is not None:
-        feat_dict["MMSE_Orientation"] = min(10.0, float(mmse_val) * 0.33)
-        feat_dict["MMSE_Recall"] = min(3.0, float(mmse_val) * 0.10)
-        feat_dict["MMSE_Attention"] = min(5.0, float(mmse_val) * 0.16)
-        feat_dict["MMSE_Language"] = min(9.0, float(mmse_val) * 0.30)
-    else:
-        feat_dict["MMSE_Orientation"] = np.nan
-        feat_dict["MMSE_Recall"] = np.nan
-        feat_dict["MMSE_Attention"] = np.nan
-        feat_dict["MMSE_Language"] = np.nan
-
-    if moca_val is not None:
-        feat_dict["MoCA_Visuospatial"] = min(5.0, float(moca_val) * 0.18)
-        feat_dict["MoCA_Naming"] = min(3.0, float(moca_val) * 0.10)
-        feat_dict["MoCA_Attention"] = min(6.0, float(moca_val) * 0.22)
-        feat_dict["MoCA_Delayed_Recall"] = min(5.0, float(moca_val) * 0.15)
-        feat_dict["MoCA_Orientation"] = min(6.0, float(moca_val) * 0.20)
-
-    if cdrsb_val is not None:
-        cdr_f = float(cdrsb_val)
-        feat_dict["CDRSB"] = cdr_f
-        feat_dict["CDGLOBAL"] = 3.0 if cdr_f >= 9.0 else (2.0 if cdr_f >= 4.0 else (1.0 if cdr_f >= 2.0 else (0.5 if cdr_f >= 0.5 else 0.0)))
-        feat_dict["CDMEMORY"] = min(3.0, cdr_f * 0.25)
-        feat_dict["CDORIENT"] = min(3.0, cdr_f * 0.20)
-        feat_dict["CDJUDGE"] = min(3.0, cdr_f * 0.20)
-        feat_dict["CDCOMMUN"] = min(3.0, cdr_f * 0.15)
-        feat_dict["CDHOME"] = min(3.0, cdr_f * 0.10)
-        feat_dict["CDCARE"] = min(3.0, cdr_f * 0.10)
-
-    if faq_val is not None:
-        faq_f = float(faq_val)
-        feat_dict["FAQTOTAL"] = faq_f
-        feat_dict["FAQFORM"] = min(3.0, faq_f * 0.15)
-        feat_dict["FAQFINAN"] = min(3.0, faq_f * 0.15)
-        feat_dict["FAQSHOP"] = min(3.0, faq_f * 0.12)
-        feat_dict["FAQGAME"] = min(3.0, faq_f * 0.08)
-        feat_dict["FAQBEVG"] = min(3.0, faq_f * 0.08)
-        feat_dict["FAQMEAL"] = min(3.0, faq_f * 0.10)
-        feat_dict["FAQEVENT"] = min(3.0, faq_f * 0.12)
-        feat_dict["FAQTV"] = min(3.0, faq_f * 0.08)
-        feat_dict["FAQREM"] = min(3.0, faq_f * 0.12)
-        feat_dict["FAQTRAVL"] = min(3.0, faq_f * 0.10)
-
-    feat_dict["NPIQ_Total_Severity"] = min(12.0, float(gds_val) * 1.5) if gds_val is not None else 0.0
-    feat_dict["NPID"] = 1.0 if (gds_val and float(gds_val) >= 3.0) else 0.0
-    feat_dict["NPIE"] = 1.0 if (gds_val and float(gds_val) >= 4.0) else 0.0
-    feat_dict["NPIC"] = 0.0
-    feat_dict["VSBPSYS"] = 140.0
-    feat_dict["VSBPDIA"] = 85.0
-    feat_dict["Pulse_Pressure"] = 55.0
-    feat_dict["VSPULSE"] = 72.0
-    feat_dict["BMI"] = 26.5
-    feat_dict["MHPSYCH"] = 1.0 if (gds_val and float(gds_val) >= 4.0) else 0.0
-    feat_dict["MH2NEURL"] = 0.0
-    feat_dict["MH4CARD"] = 1.0 if (p_db and p_db.get("medical_history", {}).get("hypertension")) else 0.0
-    feat_dict["MH9ENDO"] = 1.0 if (p_db and p_db.get("medical_history", {}).get("diabetes")) else 0.0
-    feat_dict["MH14ALCH"] = 0.0
-    feat_dict["AD_Medical_Risk_Score"] = 2.0
+    for feature_name in (
+        "MMSE_Orientation", "MMSE_Recall", "MMSE_Attention", "MMSE_Language",
+        "MoCA_Visuospatial", "MoCA_Naming", "MoCA_Attention",
+        "MoCA_Delayed_Recall", "MoCA_Orientation", "CDGLOBAL", "CDMEMORY",
+        "CDORIENT", "CDJUDGE", "CDCOMMUN", "CDHOME", "CDCARE", "FAQFINAN",
+        "FAQFORM", "FAQSHOP", "FAQGAME", "FAQBEVG", "FAQMEAL", "FAQEVENT",
+        "FAQTV", "FAQREM", "FAQTRAVL", "NPIQ_Total_Severity", "NPID", "NPIE",
+        "NPIC", "VSBPSYS", "VSBPDIA", "Pulse_Pressure", "VSPULSE", "BMI",
+        "MHPSYCH", "MH2NEURL", "MH14ALCH", "AD_Medical_Risk_Score",
+    ):
+        feat_dict[feature_name] = s1_db.get(feature_name.lower(), np.nan)
+    feat_dict["MH4CARD"] = (
+        float(req.cognitive.has_hypertension)
+        if req.cognitive.has_hypertension is not None else
+        float(bool(medical_history["hypertension"]))
+        if "hypertension" in medical_history else np.nan
+    )
+    feat_dict["MH9ENDO"] = (
+        float(req.cognitive.has_diabetes)
+        if req.cognitive.has_diabetes is not None else
+        float(bool(medical_history["diabetes"]))
+        if "diabetes" in medical_history else np.nan
+    )
 
     # Genetic APOE
     apoe_val = req.apoe4_count
     if apoe_val is None and p_db and p_db.get("apoe"):
         apoe_str = str(p_db.get("apoe"))
         apoe_val = 2 if "ε4/ε4" in apoe_str else (1 if "ε4" in apoe_str else 0)
-    feat_dict["APOE4_Count"] = float(apoe_val) if apoe_val is not None else 0.0
+    feat_dict["APOE4_Count"] = float(apoe_val) if apoe_val is not None else np.nan
 
-    # Stage 2: Plasma Proteomics features
-    ptau_val = req.plasma_ptau217 if req.plasma_ptau217 is not None else (s2_db.get("plasma_ptau217") or s2_db.get("ptau217"))
-    ab42_40_val = req.plasma_ab42_40 if req.plasma_ab42_40 is not None else (s2_db.get("plasma_ab42_40") or s2_db.get("ab42_40"))
-    nfl_val = req.plasma_nfl if req.plasma_nfl is not None else s2_db.get("plasma_nfl")
-    gfap_val = req.plasma_gfap if req.plasma_gfap is not None else s2_db.get("plasma_gfap")
-
-    if ptau_val is not None:
-        ptau_f = float(ptau_val)
-        ptau_z = (ptau_f - 0.15) / 0.08
-        feat_dict["c2n_pT217_C2N_z"] = ptau_z
-        feat_dict["c2n_npT217_C2N_z"] = ptau_z * 0.95
-        feat_dict["c2n_pT217_npT217_C2N_z"] = ptau_z * 1.1
-        feat_dict["upenn_pT217_F_z"] = ptau_z
-        feat_dict["composite_ptau217_z"] = ptau_z
-        feat_dict["janssen_ptau217_z"] = ptau_z
-        feat_dict["lilly_ptau217_z"] = ptau_z
-        feat_dict["blennow_PLASMATAU_z"] = ptau_z
-        feat_dict["roche_PTAU_z"] = ptau_z
-        feat_dict["roche_TAU_z"] = ptau_z * 0.8
-        feat_dict["c2n_is_amyloid_pos"] = 1.0 if ptau_f >= 0.20 else 0.0
-        feat_dict["upenn_is_amyloid_pos"] = 1.0 if ptau_f >= 0.20 else 0.0
-
-    if ab42_40_val is not None:
-        ab_f = float(ab42_40_val)
-        ab_z = (0.095 - ab_f) / 0.02
-        feat_dict["c2n_AB42_AB40_C2N_z"] = ab_z
-        feat_dict["c2n_AB42_C2N_z"] = -ab_z * 0.8
-        feat_dict["c2n_AB40_C2N_z"] = ab_z * 0.5
-        feat_dict["upenn_AB42_AB40_F_z"] = ab_z
-        feat_dict["upenn_AB42_F_z"] = -ab_z * 0.8
-        feat_dict["upenn_AB40_F_z"] = ab_z * 0.5
-        feat_dict["roche_ABETA42_z"] = -ab_z * 0.8
-        feat_dict["roche_ABETA40_z"] = ab_z * 0.5
-        feat_dict["composite_abeta_ratio_z"] = ab_z
-        feat_dict["c2n_APS2_C2N_z"] = ab_z * 1.2
-
-    if ptau_val is not None and ab42_40_val is not None:
-        feat_dict["upenn_pT217_AB42_F_z"] = (feat_dict["c2n_pT217_C2N_z"] + feat_dict["c2n_AB42_AB40_C2N_z"]) / 2.0
-
-    if gfap_val is not None:
-        gfap_f = float(gfap_val)
-        gfap_z = (gfap_f - 120.0) / 60.0
-        feat_dict["upenn_GFAP_Q_z"] = gfap_z
-        feat_dict["composite_gfap_z"] = gfap_z
-
-    if nfl_val is not None:
-        nfl_f = float(nfl_val)
-        nfl_z = (nfl_f - 12.0) / 5.0
-        feat_dict["upenn_NfL_Q_z"] = nfl_z
-        feat_dict["composite_nfl_z"] = nfl_z
+    # Stage 2 training uses assay-standardized cohort z-scores. Raw laboratory
+    # values cannot be converted without assay-specific normalization metadata.
+    ptau_z = req.plasma_ptau217_z if req.plasma_ptau217_z is not None else s2_db.get("plasma_ptau217_z")
+    ab42_40_z = req.plasma_ab42_40_z if req.plasma_ab42_40_z is not None else s2_db.get("plasma_ab42_40_z")
+    nfl_z = req.plasma_nfl_z if req.plasma_nfl_z is not None else s2_db.get("plasma_nfl_z")
+    gfap_z = req.plasma_gfap_z if req.plasma_gfap_z is not None else s2_db.get("plasma_gfap_z")
+    for feature_name, value in (
+        ("composite_ptau217_z", ptau_z),
+        ("composite_abeta_ratio_z", ab42_40_z),
+        ("upenn_NfL_Q_z", nfl_z),
+        ("upenn_GFAP_Q_z", gfap_z),
+    ):
+        if value is not None:
+            feat_dict[feature_name] = float(value)
 
     # Stage 3: Volumetric MRI Morphometry features
-    hippo_cm3 = req.hippocampus_cm3 if req.hippocampus_cm3 is not None else (s3_db.get("hippocampus_cm3") or s3_db.get("hippoVol"))
-    vent_cm3 = req.ventricles_cm3 if req.ventricles_cm3 is not None else (s3_db.get("ventricles_cm3") or s3_db.get("ventriclesVol"))
+    hippo_cm3 = req.hippocampus_cm3 if req.hippocampus_cm3 is not None else s3_db.get("hippocampus_cm3", s3_db.get("hippoVol"))
     hippo_icv = req.hippocampus_icv_ratio if req.hippocampus_icv_ratio is not None else s3_db.get("hippocampus_icv_ratio")
+    vent_cm3 = req.ventricles_cm3 if req.ventricles_cm3 is not None else s3_db.get("ventricles_cm3", s3_db.get("ventriclesVol"))
+    icv_cm3 = req.icv_cm3 if req.icv_cm3 is not None else s3_db.get("icv_cm3")
+    ventricles_icv_ratio = req.ventricles_icv_ratio if req.ventricles_icv_ratio is not None else s3_db.get("ventricles_icv_ratio")
     wmh_cm3 = req.wmh_volume_cm3 if req.wmh_volume_cm3 is not None else s3_db.get("wmh_volume_cm3")
 
     if hippo_cm3 is not None:
-        h_f = float(hippo_cm3)
-        feat_dict["hippocampus_total_vol"] = h_f * 1000.0  # mm3
-        feat_dict["hippocampus_icv_ratio"] = float(hippo_icv) if hippo_icv is not None else (h_f / 1500.0)
-        feat_dict["entorhinal_avg_vol"] = h_f * 380.0
-        feat_dict["midtemp_avg_vol"] = h_f * 4500.0
-        feat_dict["wholebrain_icv_ratio"] = 0.70
-
-    if vent_cm3 is not None:
-        v_f = float(vent_cm3)
-        feat_dict["ventricles_icv_ratio"] = v_f / 1500.0
+        feat_dict["hippocampus_total_vol"] = float(hippo_cm3) * 1000.0
+    if hippo_icv is not None:
+        ratio_value = float(hippo_icv)
+        feat_dict["hippocampus_icv_ratio"] = (
+            ratio_value * 1000.0 if abs(ratio_value) < 0.1 else ratio_value
+        )
+    elif hippo_cm3 is not None and icv_cm3 is not None and float(icv_cm3) > 0:
+        feat_dict["hippocampus_icv_ratio"] = (
+            float(hippo_cm3) / float(icv_cm3)
+        ) * 1000.0
+    if ventricles_icv_ratio is not None:
+        feat_dict["ventricles_icv_ratio"] = float(ventricles_icv_ratio)
+    elif vent_cm3 is not None and icv_cm3 is not None and float(icv_cm3) > 0:
+        feat_dict["ventricles_icv_ratio"] = float(vent_cm3) / float(icv_cm3)
+    for feature_name in ("wholebrain_icv_ratio", "entorhinal_avg_vol", "midtemp_avg_vol"):
+        feat_dict[feature_name] = s3_db.get(feature_name, np.nan)
 
     if wmh_cm3 is not None:
-        w_f = float(wmh_cm3)
-        feat_dict["wmh_volume_cm3"] = w_f
-        feat_dict["wmh_tcv_ratio"] = w_f / 1500.0
+        feat_dict["wmh_volume_cm3"] = float(wmh_cm3)
+    feat_dict["wmh_tcv_ratio"] = s3_db.get("wmh_tcv_ratio", np.nan)
 
     # Stage 4: Molecular Amyloid PET features
     cent_val = req.centiloids if req.centiloids is not None else s4_db.get("centiloids")
-    tau_suvr = req.tau_suvr if req.tau_suvr is not None else (s4_db.get("tau_suvr") or s4_db.get("suvr"))
-    microbleeds_val = req.microbleeds if req.microbleeds is not None else (s4_db.get("microbleeds") or s4_db.get("microbleedsCount") or 0)
+    tau_suvr = req.tau_suvr if req.tau_suvr is not None else s4_db.get("tau_suvr", s4_db.get("suvr"))
+    microbleeds_val = req.microbleeds if req.microbleeds is not None else s4_db.get("microbleeds", s4_db.get("microbleedsCount"))
 
     if cent_val is not None:
         c_f = float(cent_val)
         feat_dict["Amyloid_Centiloids"] = c_f
-        feat_dict["Amyloid_Positive"] = 1.0 if c_f >= 25.0 else 0.0
-        feat_dict["Amyloid_Summary_SUVR"] = 1.0 + (c_f / 100.0) * 0.5
-        feat_dict["Amyloid_Prefrontal_SUVR"] = 1.0 + (c_f / 100.0) * 0.55
-        feat_dict["Amyloid_Parietal_SUVR"] = 1.0 + (c_f / 100.0) * 0.52
+        feat_dict["Amyloid_Positive"] = 1.0 if c_f >= 20.0 else 0.0
 
     if tau_suvr is not None:
-        t_f = float(tau_suvr)
-        feat_dict["Tau_MetaTemporal_SUVR"] = t_f
-        feat_dict["Tau_Entorhinal_SUVR"] = t_f * 1.08
-        feat_dict["Tau_Hippocampus_SUVR"] = t_f * 1.04
-        feat_dict["Tau_InferiorTemporal_SUVR"] = t_f * 1.02
-        feat_dict["Tau_Braak_High"] = 1.0 if t_f >= 1.30 else 0.0
+        feat_dict["Tau_MetaTemporal_SUVR"] = float(tau_suvr)
 
-    feat_dict["ARIA_E_Risk_Score"] = float(microbleeds_val) * 0.25
+    for feature_name in (
+        "Amyloid_Summary_SUVR", "Amyloid_Prefrontal_SUVR",
+        "Amyloid_Parietal_SUVR", "Tau_Entorhinal_SUVR",
+        "Tau_Hippocampus_SUVR", "Tau_InferiorTemporal_SUVR",
+        "Tau_Braak_High", "ARIA_E_Risk_Score",
+    ):
+        feat_dict[feature_name] = s4_db.get(feature_name, np.nan)
 
-    # India LASI-DAD Normative Calibration Offset
-    if req.apply_india_calibration:
-        if edu_val < 10:
-            if not np.isnan(feat_dict.get("MMSCORE", np.nan)):
-                feat_dict["MMSCORE"] = min(30.0, feat_dict["MMSCORE"] + 1.5)
-            if not np.isnan(feat_dict.get("MOCA_Total", np.nan)):
-                feat_dict["MOCA_Total"] = min(30.0, feat_dict["MOCA_Total"] + 2.0)
+    stage_inputs = {
+        1: (mmse_val, moca_val, cdrsb_val, faq_val, adas_val),
+        2: (ptau_z, ab42_40_z, nfl_z, gfap_z),
+        3: (
+            hippo_cm3,
+            hippo_icv,
+            vent_cm3 if icv_cm3 is not None else None,
+            ventricles_icv_ratio,
+            wmh_cm3,
+        ),
+        4: (cent_val, tau_suvr),
+    }
+    if not any(value is not None for value in stage_inputs[stage]):
+        raise HTTPException(
+            status_code=422,
+            detail=f"Provide at least one measured input for Stage {stage} before requesting a research estimate.",
+        )
 
     feature_cols = FEATURE_LISTS[stage]
     df_in = pd.DataFrame([feat_dict])
@@ -704,131 +1005,71 @@ def predict_triage(req: DynamicTriageRequest):
 
     model = MODELS[stage]
     raw_prob = float(model.predict_proba(X_eval)[:, 1][0])
-    
-    # 1. Multi-Modal Disease Severity Index with Biomarker Modality Fusion
-    severity_index = float(raw_prob)
-    if stage == 2 and ptau_val is not None:
-        ptau_f = float(ptau_val)
-        ab_f = float(ab42_40_val if ab42_40_val is not None else 0.089)
-        gfap_f = float(gfap_val if gfap_val is not None else 180.0)
-        nfl_f = float(nfl_val if nfl_val is not None else 14.0)
-        ptau_z = (ptau_f - 0.15) / 0.08
-        ab_z = (0.095 - ab_f) / 0.02
-        gfap_z = (gfap_f - 120.0) / 60.0
-        nfl_z = (nfl_f - 12.0) / 5.0
-        apoe_bonus = 0.25 * float(feat_dict.get("APOE4_Count", 0.0))
-        bio_score = 0.40 * ptau_z + 0.30 * ab_z + 0.15 * gfap_z + 0.15 * nfl_z + apoe_bonus
-        bio_plasma_prob = float(1.0 / (1.0 + np.exp(-0.85 * bio_score)))
-        severity_index = float(0.40 * raw_prob + 0.60 * bio_plasma_prob)
-    elif stage == 3 and hippo_cm3 is not None:
-        h_f = float(hippo_cm3)
-        v_f = float(vent_cm3 if vent_cm3 is not None else 40.0)
-        w_f = float(wmh_cm3 if wmh_cm3 is not None else 2.0)
-        mri_score = 0.55 * ((3.8 - h_f) / 0.6) + 0.30 * ((v_f - 35.0) / 15.0) + 0.15 * ((w_f - 2.0) / 2.0)
-        bio_mri_prob = float(1.0 / (1.0 + np.exp(-1.1 * mri_score)))
-        severity_index = float(0.40 * raw_prob + 0.60 * bio_mri_prob)
-    elif stage == 4 and cent_val is not None:
-        c_f = float(cent_val)
-        t_f = float(tau_suvr if tau_suvr is not None else 1.25)
-        pet_score = 0.60 * ((c_f - 25.0) / 35.0) + 0.40 * ((t_f - 1.25) / 0.25)
-        bio_pet_prob = float(1.0 / (1.0 + np.exp(-1.2 * pet_score)))
-        severity_index = float(0.40 * raw_prob + 0.60 * bio_pet_prob)
+    severity_index = raw_prob
+    cal_prob = float(CALIBRATORS[stage].predict(np.asarray([raw_prob]))[0])
 
-    severity_index = max(0.02, min(0.98, severity_index))
-    
-    # 2. Smooth Platt Scaling for 24-Month Epidemiological Progression Risk
-    eps = 1e-6
-    raw_clamped = max(eps, min(1.0 - eps, severity_index))
-    logit = float(np.log(raw_clamped / (1.0 - raw_clamped)))
-    
-    # Platt scaling calibrated parameters per stage
-    platt_params = {
-        1: (-1.10, 0.35),
-        2: (-1.05, 0.40),
-        3: (-1.00, 0.45),
-        4: (-0.90, 0.50)
-    }
-    A, B = platt_params.get(stage, (-1.0, 0.4))
-    cal_prob = float(1.0 / (1.0 + np.exp(A * logit + B)))
-    cal_prob = max(0.02, min(0.98, cal_prob))
+    current_dx = "Not estimated by the 24-month progression model"
 
-    # Dynamic 3-Class Continuous Diagnosis Probabilities (NIA-AA Clinical Criteria)
-    is_normal = (
-        (mmse_val is not None and float(mmse_val) >= 27 and (cdrsb_val is None or float(cdrsb_val) <= 0.5)) or
-        (moca_val is not None and float(moca_val) >= 26 and (cdrsb_val is None or float(cdrsb_val) <= 0.5)) or
-        (ptau_val is not None and float(ptau_val) <= 0.15 and (mmse_val is None or float(mmse_val) >= 25)) or
-        (hippo_cm3 is not None and float(hippo_cm3) >= 4.0 and (mmse_val is None or float(mmse_val) >= 25)) or
-        (cent_val is not None and float(cent_val) < 20.0 and (mmse_val is None or float(mmse_val) >= 25)) or
-        (severity_index < 0.28)
-    )
-    is_dementia = (
-        (mmse_val is not None and float(mmse_val) <= 20) or
-        (moca_val is not None and float(moca_val) <= 16) or
-        (cdrsb_val is not None and float(cdrsb_val) >= 4.0) or
-        (ptau_val is not None and float(ptau_val) >= 0.35) or
-        (hippo_cm3 is not None and float(hippo_cm3) <= 2.95) or
-        (cent_val is not None and float(cent_val) >= 60.0) or
-        (tau_suvr is not None and float(tau_suvr) >= 1.50) or
-        (severity_index >= 0.75)
+    thresh = STAGE_THRESHOLDS[stage]
+    escalate = cal_prob >= thresh
+    next_step = (
+        "Research-only score is above the model threshold. A qualified clinician must "
+        "independently assess the patient; this is not a referral or treatment recommendation."
+        if escalate
+        else "Research-only score is below the model threshold. This is not a diagnosis "
+        "or a reason to defer clinical assessment."
     )
 
-    if is_normal and not is_dementia:
-        p_cn = float(max(0.75, 1.0 - 1.1 * severity_index))
-        p_mci = float(min(0.22, 0.9 * severity_index))
-        p_ad = float(max(0.01, 1.0 - p_cn - p_mci))
-        current_dx = "Cognitively Normal"
-    elif is_dementia:
-        p_ad = float(min(0.95, 0.55 + 0.40 * severity_index))
-        p_mci = float(max(0.04, 0.92 - p_ad))
-        p_cn = float(max(0.01, 1.0 - p_ad - p_mci))
-        current_dx = "Alzheimer's Dementia (AD)"
-    else:
-        # Mild Cognitive Impairment (MCI)
-        p_mci = float(max(0.72, 0.92 - abs(severity_index - 0.50)))
-        p_cn = float(max(0.05, 0.35 - 0.4 * severity_index))
-        p_ad = float(max(0.05, 1.0 - p_mci - p_cn))
-        current_dx = "Mild Cognitive Impairment (MCI)"
+    velocity_tier = "Above research threshold" if escalate else "Below research threshold"
 
-    sum_p = p_cn + p_mci + p_ad
-    p_cn, p_mci, p_ad = round(p_cn / sum_p, 3), round(p_mci / sum_p, 3), round(p_ad / sum_p, 3)
+    contributions = model.get_booster().predict(
+        xgb.DMatrix(X_eval, feature_names=feature_cols),
+        pred_contribs=True,
+    )[0]
+    shap_drivers = [
+        {
+            "name": feature_cols[index],
+            "val": f"{float(contributions[index]):+.4f}",
+            "desc": "XGBoost SHAP contribution to the raw model output.",
+        }
+        for index in np.argsort(np.abs(contributions[:-1]))[::-1][:5]
+        if contributions[index] != 0
+    ]
 
-    thresholds = {1: 0.35, 2: 0.40, 3: 0.45, 4: 0.50}
-    thresh = thresholds.get(stage, 0.35)
-    escalate = (severity_index >= thresh) or (cal_prob >= 0.30)
-
-    stage_cds = {
-        1: ("Elevated risk detected. Authorize Stage 2 Phlebotomy Panel (Plasma p-tau217 + APOE4 genotyping)." if escalate
-            else "Low progression risk. Retain in Primary Care with 12-month routine cognitive surveillance."),
-        2: ("Positive blood biomarker elevation. Order Stage 3 3D Volumetric Brain MRI for hippocampal volumetry." if escalate
-            else "Plasma biomarkers within normal range. Defer advanced imaging; retain in primary care."),
-        3: ("Significant medial temporal atrophy confirmed. Escalate to Stage 4 Molecular Amyloid PET (Centiloids)." if escalate
-            else "Structural MRI reveals minimal neurodegeneration. Investigate reversible non-AD causes."),
-        4: ("Confirmed Amyloid+ early AD. Candidate eligible for Monoclonal Antibody DMT (Lecanemab/Donanemab)." if (req.centiloids or 0) >= 20.0 else
-            "Amyloid negative or advanced impairment. Initiate symptomatic Alzheimer's care protocol.")
-    }
-    next_step = stage_cds.get(stage, "Consult neurology team for further evaluation.")
-
-    velocity_tier = "Rapid Converter" if severity_index > 0.65 else ("Moderate" if severity_index > 0.35 else "Stable/Low")
-
-    # Stage-specific SHAP drivers (approximate)
-    shap_drivers = []
-    if req.cognitive.mmse is not None:
-        shap_drivers.append({"name": f"MMSE Score ({req.cognitive.mmse}/30)", "val": f"+{round(0.28 * (severity_index / 0.5), 2)}", "desc": "Cognitive battery performance"})
-    if req.cognitive.cdrsb is not None:
-        shap_drivers.append({"name": f"CDR-SB ({req.cognitive.cdrsb} pts)", "val": f"+{round(0.20 * (severity_index / 0.5), 2)}", "desc": "Clinical dementia rating sum of boxes"})
-    if req.plasma_ptau217 is not None:
-        shap_drivers.append({"name": f"Plasma p-tau217 ({req.plasma_ptau217} pg/mL)", "val": f"+{round(0.24 * (severity_index / 0.5), 2)}", "desc": "Specific tau phosphorylation biomarker"})
-    if req.hippocampus_icv_ratio is not None:
-        shap_drivers.append({"name": f"Hippo/ICV Ratio ({req.hippocampus_icv_ratio:.4f})", "val": f"+{round(0.18 * (severity_index / 0.5), 2)}", "desc": "Medial temporal volumetric atrophy"})
-    if req.centiloids is not None:
-        shap_drivers.append({"name": f"Centiloids ({req.centiloids} CL)", "val": f"+{round(0.22 * (severity_index / 0.5), 2)}", "desc": "Cortical amyloid plaque burden"})
-    if req.apoe4_count is not None:
-        shap_drivers.append({"name": f"APOE-ε4 Allele ({req.apoe4_count}x)", "val": f"+{round(0.15 * (severity_index / 0.5), 2)}", "desc": "Genetic risk multiplier"})
-    if not shap_drivers:
-        shap_drivers = [
-            {"name": "Cognitive Decline Velocity", "val": f"+{round(0.28 * (severity_index / 0.5), 2)}", "desc": "Composite cognitive score trajectory"},
-            {"name": "Age-Related Risk", "val": f"+{round(0.12 * (severity_index / 0.5), 2)}", "desc": "Age-adjusted neurodegeneration risk"}
-        ]
+    mlp_result = None
+    if stage in MLP_MODELS and stage in MLP_PREPROCESSORS:
+        try:
+            mlp_model = MLP_MODELS[stage]
+            mlp_prep = MLP_PREPROCESSORS[stage]
+            mlp_thresh = MLP_THRESHOLDS.get(stage, 0.5)
+            
+            # Ensure dataframe matches preprocessor expected feature names
+            if hasattr(mlp_prep, "feature_names_in_"):
+                expected_mlp_cols = list(mlp_prep.feature_names_in_)
+                for c in expected_mlp_cols:
+                    if c not in df_in.columns:
+                        df_in[c] = np.nan
+                X_mlp_in = df_in[expected_mlp_cols]
+            else:
+                X_mlp_in = X_eval
+                
+            X_mlp_trans = mlp_prep.transform(X_mlp_in)
+            with torch.no_grad():
+                mlp_t = torch.tensor(X_mlp_trans, dtype=torch.float32)
+                mlp_logits = mlp_model(mlp_t)
+                mlp_prob = float(torch.sigmoid(mlp_logits).item())
+            
+            mlp_escalate = mlp_prob >= mlp_thresh
+            mlp_result = {
+                "progression_24m_risk": round(mlp_prob, 4),
+                "progression_24m_risk_pct": round(mlp_prob * 100, 1),
+                "optimal_threshold": mlp_thresh,
+                "escalation_recommended": bool(mlp_escalate),
+                "model_architecture": "MLP (128 -> 64 -> 1)",
+                "metrics": MLP_METRICS.get(stage, {}),
+            }
+        except Exception as e:
+            print(f"Warning: MLP evaluation failed: {e}")
 
     result = {
         "patient_id": req.patient_id,
@@ -840,13 +1081,23 @@ def predict_triage(req: DynamicTriageRequest):
         "calibrated_risk": round(cal_prob, 4),
         "calibrated_risk_pct": round(cal_prob * 100, 1),
         "raw_xgboost_prob": round(raw_prob, 4),
+        "mlp_prediction": mlp_result,
+        "model_comparison": {
+            "xgboost": {
+                "progression_24m_risk": round(cal_prob, 4),
+                "progression_24m_risk_pct": round(cal_prob * 100, 1),
+                "optimal_threshold": thresh,
+                "escalation_recommended": bool(escalate),
+            },
+            "mlp": mlp_result,
+            "interpretation_notice": (
+                "XGBoost baseline and PyTorch MLP progression models are compared under identical "
+                "temporal holdouts. Both estimate 24-month progression probability."
+            ),
+        },
         "dual_head": {
             "current_diagnosis": current_dx,
-            "diagnosis_probabilities": {
-                "Cognitively_Normal": p_cn,
-                "Mild_Cognitive_Impairment": p_mci,
-                "Alzheimers_Dementia": p_ad
-            },
+            "diagnosis_probabilities": {},
             "progression_24m_risk": round(cal_prob, 4),
             "progression_24m_risk_pct": round(cal_prob * 100, 1),
             "velocity_tier": velocity_tier
@@ -854,11 +1105,22 @@ def predict_triage(req: DynamicTriageRequest):
         "gating_decision": {
             "optimal_threshold": thresh,
             "escalation_recommended": bool(escalate),
-            "confidence": "High (>95% Specificity)" if abs(severity_index - thresh) > 0.12 else "Moderate Borderline"
+            "confidence": "Not available; threshold is research-only."
+        },
+        "measured_inputs": {
+            "plasma_ptau217_z": ptau_z,
+            "plasma_ab42_40_z": ab42_40_z,
+            "plasma_nfl_z": nfl_z,
+            "plasma_gfap_z": gfap_z,
+            "hippocampus_icv_ratio": hippo_icv,
+            "ventricles_icv_ratio": ventricles_icv_ratio,
+            "wmh_volume_cm3": wmh_cm3,
+            "centiloids": cent_val,
+            "tau_suvr": tau_suvr,
         },
         "cds_recommendation": next_step,
         "shap_drivers": shap_drivers,
-        "india_demographic_calibrated": req.apply_india_calibration
+        "india_demographic_calibrated": False
     }
 
     # Auto-save if requested
@@ -870,8 +1132,7 @@ def predict_triage(req: DynamicTriageRequest):
                     "stage_number": stage,
                     "mmse": req.cognitive.mmse, "moca": req.cognitive.moca,
                     "cdrsb": req.cognitive.cdrsb, "faq": req.cognitive.faq,
-                    "ptau217": req.plasma_ptau217, "ab42_40": req.plasma_ab42_40,
-                    "nfl": req.plasma_nfl, "gfap": req.plasma_gfap,
+                    "ptau217": None, "ab42_40": None, "nfl": None, "gfap": None,
                     "hippocampus_cm3": req.hippocampus_cm3,
                     "centiloids": req.centiloids, "tau_suvr": req.tau_suvr,
                     "microbleeds": req.microbleeds,
@@ -1177,96 +1438,6 @@ async def parse_lab_report(
 
 
 # =====================================================================
-# VISION ENDPOINTS
-# =====================================================================
-
-@app.post("/api/vision/analyze-mri")
-async def analyze_mri_scan(
-    file: Optional[UploadFile] = File(None),
-    subject_preset: Optional[str] = Query("mci_case"),
-    target_class: Optional[int] = Query(1)
-):
-    filename = file.filename if file else f"ADNI_MR_T1_{subject_preset}.dcm"
-    file_size_kb = 0
-    pil_img = None
-
-    if file:
-        try:
-            content = await file.read()
-            file_size_kb = len(content) // 1024
-            if filename.lower().endswith('.zip'):
-                pil_img = parse_zip_dicom_bytes(content)
-            elif filename.lower().endswith(('.dcm', '.ima', '.dicom')):
-                pil_img = parse_dicom_bytes(content)
-            else:
-                pil_img = Image.open(io.BytesIO(content)).convert('RGB').resize((256, 256))
-        except Exception as e:
-            print("Failed to parse uploaded MRI image:", e)
-
-    if pil_img is None:
-        atrophy_map = {"normal_case": 0.1, "mci_case": 0.5, "ad_case": 0.95}
-        class_map = {"normal_case": 0, "mci_case": 1, "ad_case": 2}
-        preset_key = "ad_case" if "ad" in filename.lower() else ("normal_case" if "cn" in filename.lower() or "normal" in filename.lower() else "mci_case")
-        pil_img = generate_anatomical_mri(atrophy_map.get(subject_preset or preset_key, 0.5))
-        target_class = class_map.get(subject_preset or preset_key, 1)
-
-    result = run_mri_model_inference(pil_img, target_class=target_class)
-    return {
-        "filename": filename,
-        "file_size_kb": file_size_kb or 52,
-        "scan_type": "T1-Weighted 3D Sagittal MRI (GE SIGNA Premier 3.0T AIR Recon DL)",
-        "vision_model": result.get("model_architecture", "PyTorch ResNet-50 Grad-CAM"),
-        "predicted_volumes": result.get("volumetric_metrics", {}),
-        "vision_classification": {
-            "predicted_class": result.get("predicted_class", "MCI"),
-            "model_confidence": result.get("confidence_pct", 87.3) / 100.0,
-            "probabilities": result.get("class_probabilities", {})
-        },
-        "images": result.get("images", {})
-    }
-
-
-@app.post("/api/vision/analyze-pet")
-async def analyze_pet_scan(
-    file: Optional[UploadFile] = File(None),
-    preset: Optional[str] = Query("amyloid_positive")
-):
-    filename = file.filename if file else f"ADNI_PT_AV45_{preset}.dcm"
-    file_size_kb = 0
-    pil_img = None
-
-    if file:
-        try:
-            content = await file.read()
-            file_size_kb = len(content) // 1024
-            if filename.lower().endswith('.zip'):
-                pil_img = parse_zip_dicom_bytes(content)
-            elif filename.lower().endswith(('.dcm', '.ima', '.dicom')):
-                pil_img = parse_dicom_bytes(content)
-            else:
-                pil_img = Image.open(io.BytesIO(content)).convert('RGB').resize((256, 256))
-        except Exception as e:
-            print("Failed to parse uploaded PET image:", e)
-
-    if pil_img is None:
-        pil_img = generate_anatomical_mri(0.5)
-
-    result = run_pet_model_inference(pil_img, preset=preset)
-    return {
-        "filename": filename,
-        "file_size_kb": file_size_kb or 64,
-        "scan_type": "18F-AV45 Molecular Amyloid PET (GE Omni Legend PET/CT)",
-        "vision_model": result.get("model_architecture", "3D DenseNet-121 GAAIN Centiloid Regressor"),
-        "centiloid_score": result.get("centiloid_score", 78.4),
-        "global_suvr": result.get("global_suvr", 1.48),
-        "tau_braak_staging": result.get("tau_braak_staging", "Stage III/IV (Limbic Transition)"),
-        "amyloid_status": result.get("amyloid_status", "Amyloid Positive"),
-        "aria_safety_prescreening": result.get("aria_safety", {}),
-        "images": result.get("images", {})
-    }
-
-
-# =====================================================================
 # SIMULATION + FHIR
 # =====================================================================
 
@@ -1314,6 +1485,199 @@ def create_fhir_servicerequest(order: ServiceRequestOrder):
         "reasonCode": [{"text": order.clinical_rationale}],
         "requester": {"display": order.ordering_physician}
     }
+
+
+# =====================================================================
+# NEUROSIGHT YOLOV8 BRAIN TUMOR DEMONSTRATION ENDPOINT
+# =====================================================================
+
+def generate_tumor_heatmap_and_annotated(image: Image.Image, first_result, detections: list) -> tuple:
+    """
+    Generates:
+    1. annotated_image: YOLOv8 plotted detections with bounding boxes & class confidence tags (Base64 data URI).
+    2. heatmap_image: Colorized MRI thermal activation / tumor density heatmap blended with anatomical scan (Base64 data URI).
+    3. heatmap_stats: Peak intensity, centroid coordinates, and localized quadrant.
+    """
+    img_np = np.array(image.convert("RGB"))
+    h, w, _ = img_np.shape
+
+    # 1. Annotated image from YOLO plot
+    plotted_bgr = first_result.plot()
+    plotted_rgb = cv2.cvtColor(plotted_bgr, cv2.COLOR_BGR2RGB)
+    ann_pil = Image.fromarray(plotted_rgb)
+    buf_ann = io.BytesIO()
+    ann_pil.save(buf_ann, format="JPEG", quality=92)
+    annotated_base64 = f"data:image/jpeg;base64,{base64.b64encode(buf_ann.getvalue()).decode('utf-8')}"
+
+    # 2. Heatmap generation
+    heatmap_acc = np.zeros((h, w), dtype=np.float32)
+    gray = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255.0
+
+    primary_centroid = None
+    peak_intensity = 0.0
+
+    if detections:
+        y_coords, x_coords = np.ogrid[:h, :w]
+        for det in detections:
+            box = det["box"]
+            conf = det["confidence"]
+            x1, y1, x2, y2 = box["x1"], box["y1"], box["x2"], box["y2"]
+            cx, cy = (x1 + x2) / 2.0, (y1 + y2) / 2.0
+            if primary_centroid is None:
+                primary_centroid = {"cx": round(cx, 1), "cy": round(cy, 1)}
+
+            # Standard deviations based on bounding box extent
+            sx = max((x2 - x1) / 2.2, 12.0)
+            sy = max((y2 - y1) / 2.2, 12.0)
+
+            # Spatial 2D Gaussian density kernel
+            kernel = np.exp(-(((x_coords - cx) ** 2) / (2.0 * sx ** 2) + ((y_coords - cy) ** 2) / (2.0 * sy ** 2)))
+
+            # Modulate with local anatomical image intensity to trace tissue contours
+            local_anatomical = np.clip(gray * 1.3, 0.2, 1.0)
+            enhanced_kernel = kernel * local_anatomical * conf
+            heatmap_acc = np.maximum(heatmap_acc, enhanced_kernel)
+
+        peak_val = float(np.max(heatmap_acc))
+        peak_intensity = round(peak_val, 3)
+        if peak_val > 0:
+            heatmap_norm = (heatmap_acc / peak_val * 255.0).astype(np.uint8)
+        else:
+            heatmap_norm = np.zeros((h, w), dtype=np.uint8)
+    else:
+        # Subtle baseline anatomical activity when no tumor detected
+        heatmap_norm = (gray * 40.0).astype(np.uint8)
+
+    # Colorize with medical JET colormap (dark blue = cold, cyan = transition, yellow/red = hyperintense lesion)
+    heatmap_color_bgr = cv2.applyColorMap(heatmap_norm, cv2.COLORMAP_JET)
+    heatmap_color_rgb = cv2.cvtColor(heatmap_color_bgr, cv2.COLOR_BGR2RGB)
+
+    # Blend with original anatomical MRI scan (58% MRI + 42% thermal colormap)
+    blended_rgb = cv2.addWeighted(img_np, 0.58, heatmap_color_rgb, 0.42, 0)
+
+    buf_heat = io.BytesIO()
+    Image.fromarray(blended_rgb).save(buf_heat, format="JPEG", quality=92)
+    heatmap_base64 = f"data:image/jpeg;base64,{base64.b64encode(buf_heat.getvalue()).decode('utf-8')}"
+
+    # Quadrant localization
+    quadrant = "Central / Periventricular"
+    if primary_centroid:
+        cx, cy = primary_centroid["cx"], primary_centroid["cy"]
+        lr = "Right" if cx < w / 2 else "Left"  # Radiological orientation (Left of scan is Right hemisphere)
+        ap = "Anterior / Frontal" if cy < h / 2 else "Posterior / Parieto-Occipital"
+        quadrant = f"{lr} {ap}"
+
+    heatmap_stats = {
+        "peak_intensity": peak_intensity,
+        "centroid": primary_centroid,
+        "radiological_quadrant": quadrant,
+        "colormap": "Medical JET (Thermal Activation)",
+    }
+
+    return annotated_base64, heatmap_base64, heatmap_stats
+
+
+@app.post("/api/tumor/detect")
+async def detect_brain_tumor(
+    file: UploadFile = File(...),
+    model_variant: str = Query("nano", pattern="^(nano|medium)$"),
+    conf_threshold: float = Query(0.25, ge=0.05, le=0.95),
+):
+    """
+    Independent research demonstration using NeuroSight AI YOLOv8 weights.
+    Detects 3 tumor classes: glioma, meningioma, pituitary.
+    Completely decoupled from Alzheimer's disease progression stages.
+    """
+    variant_val = model_variant.default if hasattr(model_variant, "default") else str(model_variant)
+    conf_val = float(conf_threshold.default if hasattr(conf_threshold, "default") else conf_threshold)
+
+    if variant_val not in TUMOR_MODELS:
+        raise HTTPException(
+            status_code=503,
+            detail=f"YOLOv8 {variant_val} tumor model is not loaded. Available: {list(TUMOR_MODELS.keys())}"
+        )
+
+    # Validate file extension
+    filename = (file.filename or "").lower()
+    allowed_exts = {".png", ".jpg", ".jpeg", ".bmp", ".webp"}
+    if not any(filename.endswith(ext) for ext in allowed_exts):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported image file extension. Allowed formats: {sorted(allowed_exts)}"
+        )
+
+    # Validate file size (max 10MB)
+    contents = await file.read()
+    if len(contents) > 10 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="File size exceeds maximum limit of 10 MB.")
+    if len(contents) < 100:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty or corrupted.")
+
+    try:
+        image = Image.open(io.BytesIO(contents)).convert("RGB")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to safely decode image: {e}")
+
+    width, height = image.size
+    if width < 32 or height < 32 or width > 4096 or height > 4096:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Image dimensions ({width}x{height}) outside permitted range (32x32 to 4096x4096)."
+        )
+
+    yolo_model = TUMOR_MODELS[variant_val]
+    results = yolo_model(image, conf=conf_val)
+    first_result = results[0]
+    names = first_result.names
+
+    detections = []
+    for box in first_result.boxes:
+        xyxy = box.xyxy[0].tolist()
+        conf = float(box.conf[0].item())
+        cls_id = int(box.cls[0].item())
+        cls_name = names.get(cls_id, f"class_{cls_id}")
+        detections.append({
+            "class_id": cls_id,
+            "class_name": cls_name,
+            "confidence": round(conf, 4),
+            "confidence_pct": round(conf * 100, 1),
+            "box": {
+                "x1": round(xyxy[0], 2),
+                "y1": round(xyxy[1], 2),
+                "x2": round(xyxy[2], 2),
+                "y2": round(xyxy[3], 2),
+                "width": round(xyxy[2] - xyxy[0], 2),
+                "height": round(xyxy[3] - xyxy[1], 2),
+            }
+        })
+
+    annotated_image, heatmap_image, heatmap_stats = generate_tumor_heatmap_and_annotated(
+        image, first_result, detections
+    )
+
+    return {
+        "status": "success",
+        "model_variant": variant_val,
+        "confidence_threshold": conf_val,
+        "image_dimensions": {"width": width, "height": height},
+        "detection_count": len(detections),
+        "detections": detections,
+        "annotated_image": annotated_image,
+        "heatmap_image": heatmap_image,
+        "heatmap_stats": heatmap_stats,
+        "classes_supported": ["glioma", "meningioma", "pituitary"],
+        "research_notice": (
+            "Educational and research demonstration only. Not a medical device and not a diagnosis. "
+            "An empty detection list means no detections met the confidence threshold, not evidence of absence."
+        )
+    }
+
+
+# =====================================================================
+# TELEMEDICINE -- WebRTC Signaling (WebSocket routes)
+# =====================================================================
+from backend.telemedicine_routes import register as _register_telemedicine
+_register_telemedicine(app)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,86 @@
+{
+  "stage": 4,
+  "model_architecture": "MLP(Linear(128)->BatchNorm->ReLU->Dropout(0.3)->Linear(64)->BatchNorm->ReLU->Dropout(0.2)->Linear(1))",
+  "mean_cv_roc_auc": 0.8086619170202656,
+  "std_cv_roc_auc": 0.014737178645828278,
+  "cv_folds": [
+    {
+      "fold": 1,
+      "ROC_AUC": 0.8310959146940111,
+      "PR_AUC": 0.46100177083742444
+    },
+    {
+      "fold": 2,
+      "ROC_AUC": 0.8126179526486117,
+      "PR_AUC": 0.4680308231672195
+    },
+    {
+      "fold": 3,
+      "ROC_AUC": 0.7853612141376678,
+      "PR_AUC": 0.4220587863628702
+    },
+    {
+      "fold": 4,
+      "ROC_AUC": 0.8040113729788984,
+      "PR_AUC": 0.42358354898315137
+    },
+    {
+      "fold": 5,
+      "ROC_AUC": 0.8102231306421392,
+      "PR_AUC": 0.4114433187373258
+    }
+  ],
+  "test_roc_auc": 0.6711786987522281,
+  "test_pr_auc": 0.21982870737409313,
+  "test_brier_loss": 0.05676675960421562,
+  "optimal_threshold": 0.07648249715566635,
+  "sensitivity": 0.53125,
+  "specificity": 0.8235294117647058,
+  "confusion_matrix": [
+    [
+      462,
+      99
+    ],
+    [
+      15,
+      17
+    ]
+  ],
+  "top_k_prioritization": [
+    {
+      "queue": "Top 5%",
+      "patients": 30,
+      "progressors_captured": 9,
+      "capture_recall": 0.28125,
+      "precision": 0.3
+    },
+    {
+      "queue": "Top 10%",
+      "patients": 60,
+      "progressors_captured": 10,
+      "capture_recall": 0.3125,
+      "precision": 0.16666666666666666
+    },
+    {
+      "queue": "Top 20%",
+      "patients": 119,
+      "progressors_captured": 17,
+      "capture_recall": 0.53125,
+      "precision": 0.14285714285714285
+    },
+    {
+      "queue": "Top 30%",
+      "patients": 178,
+      "progressors_captured": 18,
+      "capture_recall": 0.5625,
+      "precision": 0.10112359550561797
+    },
+    {
+      "queue": "Top 50%",
+      "patients": 297,
+      "progressors_captured": 22,
+      "capture_recall": 0.6875,
+      "precision": 0.07407407407407407
+    }
+  ]
+}

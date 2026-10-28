@@ -2,13 +2,13 @@
   {
     "id": "ADNI_082_S_5029",
     "mrn": "GE-ADNI-5029",
-    "name": "Elena Rostova",
+    "name": "Aanya Sharma",
     "age": 71,
     "gender": "Female",
     "dob": "1955-03-14",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b54/\u03b54",
+    "apoe": "ε4/ε4",
     "apoe4_count": 2,
     "referral": "Memory Disorders Clinic, Columbia Univ",
     "complaint": "Progressive word-finding difficulty, misplacing items daily, short-term memory lapses for 14 months.",
@@ -16,10 +16,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 3",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "DMT Eligible \u00b7 Infusion Scheduled",
+    "status": "DMT Eligible · Infusion Scheduled",
     "risk_score": 0.94,
     "progression24m": 1,
-    "velocity": "Rapid Converter (\u0394MMSE -3.5/yr)",
+    "velocity": "Rapid Converter (ΔMMSE -3.5/yr)",
     "vitals": {
       "bp": "128/82 mmHg",
       "pulse": 72,
@@ -48,7 +48,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_2",
       "shapDrivers": [
         {
-          "name": "APOE \u03b54/\u03b54 Homozygote",
+          "name": "APOE ε4/ε4 Homozygote",
           "val": "+0.32",
           "desc": "High genetic predisposition"
         },
@@ -80,7 +80,7 @@
           "desc": "Marked tau phosphorylation (>0.20 cut-off)"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.071)",
+          "name": "Aβ42/Aβ40 Ratio (0.071)",
           "val": "+0.26",
           "desc": "Severe cerebral amyloid entrapment"
         },
@@ -106,7 +106,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.12 cm\u00b3)",
+          "name": "Hippocampal Volume (3.12 cm³)",
           "val": "+0.46",
           "desc": "Severe medial temporal atrophy (<5th %ile)"
         },
@@ -165,7 +165,7 @@
         "hippocampus_cm3": 3.65,
         "centiloids": 48.0,
         "risk_score": 0.62,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -177,7 +177,7 @@
         "hippocampus_cm3": 3.38,
         "centiloids": 68.2,
         "risk_score": 0.79,
-        "stage_dx": "Stage 2 Re-evaluation \u00b7 Moderate MCI"
+        "stage_dx": "Stage 2 Re-evaluation · Moderate MCI"
       },
       {
         "visit_code": "M24",
@@ -189,7 +189,7 @@
         "hippocampus_cm3": 3.12,
         "centiloids": 88.5,
         "risk_score": 0.94,
-        "stage_dx": "Stage 4 Comprehensive \u00b7 DMT Protocol"
+        "stage_dx": "Stage 4 Comprehensive · DMT Protocol"
       }
     ],
     "cds_recommendation": "Cleared for Lecanemab (Leqembi) / Donanemab DMT Therapy"
@@ -197,13 +197,13 @@
   {
     "id": "ADNI_035_S_4410",
     "mrn": "GE-ADNI-4410",
-    "name": "Arthur Pendelton",
+    "name": "Aarav Sharma",
     "age": 66,
     "gender": "Male",
     "dob": "1960-11-20",
     "education_years": 18,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Executive Health Physical, Mayo Clinic",
     "complaint": "Mild subjective forgetfulness in stressful executive meetings; anxious regarding family dementia history.",
@@ -211,10 +211,10 @@
     "clinic_location": "GE Precision Health Outpatient Suite",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Ruled Out \u00b7 Cost Saved $4,700",
+    "status": "Ruled Out · Cost Saved $4,700",
     "risk_score": 0.08,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "120/78 mmHg",
       "pulse": 68,
@@ -248,7 +248,7 @@
           "desc": "Normal executive function"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Genotype",
+          "name": "APOE ε3/ε3 Genotype",
           "val": "-0.22",
           "desc": "Neutral genetic baseline"
         },
@@ -275,7 +275,7 @@
           "desc": "Well below 0.20 pg/mL cut-off (Rule-Out AD)"
         },
         {
-          "name": "Normal A\u03b242/A\u03b240 (0.114)",
+          "name": "Normal Aβ42/Aβ40 (0.114)",
           "val": "-0.32",
           "desc": "No abnormal brain amyloid aggregation"
         },
@@ -301,7 +301,7 @@
       "gatingDecision": "NO_IMAGING_INDICATED",
       "shapDrivers": [
         {
-          "name": "Preserved Hippocampus (4.35 cm\u00b3)",
+          "name": "Preserved Hippocampus (4.35 cm³)",
           "val": "-0.45",
           "desc": "Upper 85th percentile for age"
         }
@@ -316,7 +316,7 @@
       "sulcalSiderosis": "None",
       "ariaCleared": true,
       "dmtEligible": false,
-      "dmtDrug": "Not Indicated \u00b7 Reassure Patient",
+      "dmtDrug": "Not Indicated · Reassure Patient",
       "radiotracer": "N/A (Bypassed)",
       "petScanner": "N/A (Saved $3,500)",
       "riskScorePct": 8,
@@ -340,7 +340,7 @@
         "hippocampus_cm3": 4.38,
         "centiloids": 3.8,
         "risk_score": 0.07,
-        "stage_dx": "Stage 1 Intake \u00b7 Healthy Control"
+        "stage_dx": "Stage 1 Intake · Healthy Control"
       },
       {
         "visit_code": "M12",
@@ -352,7 +352,7 @@
         "hippocampus_cm3": 4.36,
         "centiloids": 4.0,
         "risk_score": 0.08,
-        "stage_dx": "Stage 2 Re-check \u00b7 Stable Normal"
+        "stage_dx": "Stage 2 Re-check · Stable Normal"
       },
       {
         "visit_code": "M24",
@@ -364,7 +364,7 @@
         "hippocampus_cm3": 4.35,
         "centiloids": 4.2,
         "risk_score": 0.08,
-        "stage_dx": "Stage 2 Annual \u00b7 Rule-Out Confirmed"
+        "stage_dx": "Stage 2 Annual · Rule-Out Confirmed"
       }
     ],
     "cds_recommendation": "Routine Annual Primary Care Monitoring (Low Risk Rule-Out)"
@@ -372,13 +372,13 @@
   {
     "id": "ADNI_IND_004_S_102",
     "mrn": "GE-LASI-0102",
-    "name": "Sunita Devi",
+    "name": "Diya Patel",
     "age": 64,
     "gender": "Female",
     "dob": "1962-07-04",
     "education_years": 4,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Community Health Outreach, Apollo Hospitals Bangalore",
     "complaint": "Family reports mild confusion with complex multi-step cooking recipes; low formal literacy.",
@@ -386,10 +386,10 @@
     "clinic_location": "GE Healthcare South Asia Clinical Hub",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "LASI-DAD Calibrated \u00b7 Low Risk",
+    "status": "LASI-DAD Calibrated · Low Risk",
     "risk_score": 0.28,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE -0.3/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE -0.3/yr)",
     "vitals": {
       "bp": "134/86 mmHg",
       "pulse": 76,
@@ -423,7 +423,7 @@
           "desc": "+2.2 pts adjusted for 4 yrs formal schooling"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Heterozygote",
+          "name": "APOE ε3/ε4 Heterozygote",
           "val": "+0.18",
           "desc": "Moderate genetic risk"
         },
@@ -450,7 +450,7 @@
           "desc": "Below 0.20 amyloid positivity threshold"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.098)",
+          "name": "Aβ42/Aβ40 Ratio (0.098)",
           "val": "-0.16",
           "desc": "Intermediate non-pathologic range"
         },
@@ -476,7 +476,7 @@
       "gatingDecision": "NO_STAGE_4_NEEDED",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.88 cm\u00b3)",
+          "name": "Hippocampal Volume (3.88 cm³)",
           "val": "-0.22",
           "desc": "Preserved age-adjusted volume"
         },
@@ -496,7 +496,7 @@
       "sulcalSiderosis": "None",
       "ariaCleared": true,
       "dmtEligible": false,
-      "dmtDrug": "Not Indicated \u00b7 Lifestyle & Glycemic Control",
+      "dmtDrug": "Not Indicated · Lifestyle & Glycemic Control",
       "radiotracer": "18F-AV45 Florbetapir",
       "petScanner": "GE Omni Legend",
       "riskScorePct": 25,
@@ -520,7 +520,7 @@
         "hippocampus_cm3": 3.92,
         "centiloids": 17.5,
         "risk_score": 0.29,
-        "stage_dx": "Stage 1 Intake \u00b7 LASI-DAD Calibrated"
+        "stage_dx": "Stage 1 Intake · LASI-DAD Calibrated"
       },
       {
         "visit_code": "M12",
@@ -532,7 +532,7 @@
         "hippocampus_cm3": 3.88,
         "centiloids": 18.2,
         "risk_score": 0.28,
-        "stage_dx": "Stage 2 Annual Re-check \u00b7 Stable Non-AD"
+        "stage_dx": "Stage 2 Annual Re-check · Stable Non-AD"
       }
     ],
     "cds_recommendation": "Routine Annual Primary Care Monitoring (Low Risk Rule-Out)"
@@ -540,13 +540,13 @@
   {
     "id": "ADNI_011_S_4209",
     "mrn": "GE-ADNI-4209",
-    "name": "Clara Barton",
+    "name": "Ananya Verma",
     "age": 68,
     "gender": "Female",
     "dob": "1958-04-18",
     "education_years": 14,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Primary Care Geriatric Clinic",
     "complaint": "Mild subjective memory slips, difficulty managing monthly checkbook, fatigue.",
@@ -554,10 +554,10 @@
     "clinic_location": "GE Precision Health Regional Network",
     "current_stage": 3,
     "stage_name": "Stage 3: 3D Volumetric MRI (GE SIGNA)",
-    "status": "MRI Completed \u00b7 Escalating to PET",
+    "status": "MRI Completed · Escalating to PET",
     "risk_score": 0.64,
     "progression24m": 1,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.5/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.5/yr)",
     "vitals": {
       "bp": "126/80 mmHg",
       "pulse": 70,
@@ -591,9 +591,9 @@
           "desc": "Mild executive latency"
         },
         {
-          "name": "APOE \u03b53/\u03b54",
+          "name": "APOE ε3/ε4",
           "val": "+0.16",
-          "desc": "Single \u03b54 allele carrier"
+          "desc": "Single ε4 allele carrier"
         },
         {
           "name": "FAQ Score (3.0)",
@@ -623,7 +623,7 @@
           "desc": "Mild neurodegeneration marker"
         },
         {
-          "name": "A\u03b242/A\u03b240 (0.086)",
+          "name": "Aβ42/Aβ40 (0.086)",
           "val": "+0.14",
           "desc": "Borderline reduced ratio"
         }
@@ -644,7 +644,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.52 cm\u00b3)",
+          "name": "Hippocampal Volume (3.52 cm³)",
           "val": "+0.34",
           "desc": "Borderline atrophy (15th %ile)"
         },
@@ -693,7 +693,7 @@
         "hippocampus_cm3": 3.7,
         "centiloids": 32.0,
         "risk_score": 0.45,
-        "stage_dx": "Stage 1 Intake \u00b7 Mild Amnestic"
+        "stage_dx": "Stage 1 Intake · Mild Amnestic"
       },
       {
         "visit_code": "M12",
@@ -705,7 +705,7 @@
         "hippocampus_cm3": 3.52,
         "centiloids": 44.8,
         "risk_score": 0.64,
-        "stage_dx": "Stage 3 MRI Evaluated \u00b7 Escalation"
+        "stage_dx": "Stage 3 MRI Evaluated · Escalation"
       }
     ],
     "cds_recommendation": "Escalate to Stage 4: Molecular PET & DMT Evaluation"
@@ -713,13 +713,13 @@
   {
     "id": "ADNI_098_S_6118",
     "mrn": "GE-ADNI-6118",
-    "name": "Rajesh K. Sharma",
+    "name": "Vivaan Patel",
     "age": 74,
     "gender": "Male",
     "dob": "1952-10-12",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Stroke Prevention & Memory Clinic, Manipal Hospital",
     "complaint": "Gait slowness, psychomotor slowing, executive dysfunction, multi-infarct history.",
@@ -727,10 +727,10 @@
     "clinic_location": "GE Healthcare Stroke & Neurovascular Clinic",
     "current_stage": 3,
     "stage_name": "Stage 3: 3D Volumetric MRI (GE SIGNA)",
-    "status": "Vascular Etiology \u00b7 DMT Contraindicated",
+    "status": "Vascular Etiology · DMT Contraindicated",
     "risk_score": 0.82,
     "progression24m": 1,
-    "velocity": "Progressive Vascular (\u0394MoCA -2.0/yr)",
+    "velocity": "Progressive Vascular (ΔMoCA -2.0/yr)",
     "vitals": {
       "bp": "152/94 mmHg",
       "pulse": 82,
@@ -822,12 +822,12 @@
           "desc": "Extensive periventricular & deep white matter ischemia"
         },
         {
-          "name": "Ventricular Enlargement (56.4 cm\u00b3)",
+          "name": "Ventricular Enlargement (56.4 cm³)",
           "val": "+0.28",
           "desc": "Subcortical hydrocephalus ex-vacuo"
         },
         {
-          "name": "Hippocampal Volume (3.40 cm\u00b3)",
+          "name": "Hippocampal Volume (3.40 cm³)",
           "val": "+0.16",
           "desc": "Mixed vascular-neurodegenerative loss"
         }
@@ -871,7 +871,7 @@
         "hippocampus_cm3": 3.65,
         "centiloids": 28.0,
         "risk_score": 0.65,
-        "stage_dx": "Stage 1 Intake \u00b7 Vascular Risk"
+        "stage_dx": "Stage 1 Intake · Vascular Risk"
       },
       {
         "visit_code": "M12",
@@ -883,7 +883,7 @@
         "hippocampus_cm3": 3.52,
         "centiloids": 31.0,
         "risk_score": 0.74,
-        "stage_dx": "Stage 2 Re-check \u00b7 Escalating WMH"
+        "stage_dx": "Stage 2 Re-check · Escalating WMH"
       },
       {
         "visit_code": "M24",
@@ -895,7 +895,7 @@
         "hippocampus_cm3": 3.4,
         "centiloids": 34.0,
         "risk_score": 0.82,
-        "stage_dx": "Stage 3 MRI Confirmed \u00b7 Fazekas 3"
+        "stage_dx": "Stage 3 MRI Confirmed · Fazekas 3"
       }
     ],
     "cds_recommendation": "Escalate to Stage 4: Molecular PET & DMT Evaluation"
@@ -903,13 +903,13 @@
   {
     "id": "ADNI_045_S_4006",
     "mrn": "GE-ADNI-4006",
-    "name": "Mary Verma",
+    "name": "Meera Rao",
     "age": 69,
     "gender": "Female",
     "dob": "1957-04-05",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Primary Care Screening",
     "complaint": "Patient and family note gradual cognitive changes over 11 months.",
@@ -917,10 +917,10 @@
     "clinic_location": "Memory & Aging Center, UCSF",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.13,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "128/80 mmHg",
       "pulse": 68,
@@ -954,7 +954,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -981,7 +981,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.116)",
+          "name": "Aβ42/Aβ40 Ratio (0.116)",
           "val": "-0.12",
           "desc": "Amyloid pathology indicator"
         },
@@ -1007,7 +1007,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.25 cm\u00b3)",
+          "name": "Hippocampal Volume (4.25 cm³)",
           "val": "-0.25",
           "desc": "Automated medial temporal volumetry"
         },
@@ -1056,7 +1056,7 @@
         "hippocampus_cm3": 4.5,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -1088,13 +1088,13 @@
   {
     "id": "ADNI_041_S_4007",
     "mrn": "GE-ADNI-4007",
-    "name": "Henry Garcia",
+    "name": "Aditya Verma",
     "age": 84,
     "gender": "Male",
     "dob": "1942-02-02",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b54/\u03b54",
+    "apoe": "ε4/ε4",
     "apoe4_count": 2,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 20 months.",
@@ -1102,10 +1102,10 @@
     "clinic_location": "GE Memory Clinic & Molecular Imaging Suite",
     "current_stage": 3,
     "stage_name": "Stage 3: 3D Volumetric MRI (GE SIGNA)",
-    "status": "High Amyloid \u00b7 Stage 4 Evaluation",
+    "status": "High Amyloid · Stage 4 Evaluation",
     "risk_score": 0.81,
     "progression24m": 1,
-    "velocity": "Rapid Converter (\u0394MMSE -2.5/yr)",
+    "velocity": "Rapid Converter (ΔMMSE -2.5/yr)",
     "vitals": {
       "bp": "138/89 mmHg",
       "pulse": 71,
@@ -1139,7 +1139,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b54/\u03b54 Allele",
+          "name": "APOE ε4/ε4 Allele",
           "val": "+0.36",
           "desc": "Genetic susceptibility factor"
         },
@@ -1166,7 +1166,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.073)",
+          "name": "Aβ42/Aβ40 Ratio (0.073)",
           "val": "+0.08",
           "desc": "Amyloid pathology indicator"
         },
@@ -1192,7 +1192,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.31 cm\u00b3)",
+          "name": "Hippocampal Volume (3.31 cm³)",
           "val": "+0.18",
           "desc": "Automated medial temporal volumetry"
         },
@@ -1241,7 +1241,7 @@
         "hippocampus_cm3": 3.56,
         "centiloids": 42.4,
         "risk_score": 0.61,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -1273,13 +1273,13 @@
   {
     "id": "ADNI_077_S_4008",
     "mrn": "GE-ADNI-4008",
-    "name": "Sarah Brown",
+    "name": "Kavya Mehta",
     "age": 69,
     "gender": "Female",
     "dob": "1957-12-18",
     "education_years": 14,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 23 months.",
@@ -1287,10 +1287,10 @@
     "clinic_location": "Apollo Hospitals Neuro Innovation Wing, Bangalore",
     "current_stage": 3,
     "stage_name": "Stage 3: 3D Volumetric MRI (GE SIGNA)",
-    "status": "Amnestic MCI \u00b7 Close Surveillance",
+    "status": "Amnestic MCI · Close Surveillance",
     "risk_score": 0.44,
     "progression24m": 0,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.0/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.0/yr)",
     "vitals": {
       "bp": "141/75 mmHg",
       "pulse": 81,
@@ -1324,7 +1324,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -1351,7 +1351,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.096)",
+          "name": "Aβ42/Aβ40 Ratio (0.096)",
           "val": "-0.03",
           "desc": "Amyloid pathology indicator"
         },
@@ -1377,7 +1377,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.77 cm\u00b3)",
+          "name": "Hippocampal Volume (3.77 cm³)",
           "val": "-0.03",
           "desc": "Automated medial temporal volumetry"
         },
@@ -1426,7 +1426,7 @@
         "hippocampus_cm3": 4.02,
         "centiloids": 18.9,
         "risk_score": 0.24,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -1458,13 +1458,13 @@
   {
     "id": "ADNI_026_S_4009",
     "mrn": "GE-ADNI-4009",
-    "name": "Elizabeth Nair",
+    "name": "Isha Singh",
     "age": 67,
     "gender": "Female",
     "dob": "1959-09-25",
     "education_years": 18,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 23 months.",
@@ -1472,10 +1472,10 @@
     "clinic_location": "GE Memory Clinic & Molecular Imaging Suite",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Amnestic MCI \u00b7 Close Surveillance",
+    "status": "Amnestic MCI · Close Surveillance",
     "risk_score": 0.47,
     "progression24m": 0,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.0/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.0/yr)",
     "vitals": {
       "bp": "134/85 mmHg",
       "pulse": 70,
@@ -1509,7 +1509,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -1536,7 +1536,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.092)",
+          "name": "Aβ42/Aβ40 Ratio (0.092)",
           "val": "-0.01",
           "desc": "Amyloid pathology indicator"
         },
@@ -1562,7 +1562,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.83 cm\u00b3)",
+          "name": "Hippocampal Volume (3.83 cm³)",
           "val": "-0.06",
           "desc": "Automated medial temporal volumetry"
         },
@@ -1611,7 +1611,7 @@
         "hippocampus_cm3": 4.08,
         "centiloids": 26.6,
         "risk_score": 0.27,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -1643,13 +1643,13 @@
   {
     "id": "ADNI_094_S_4010",
     "mrn": "GE-ADNI-4010",
-    "name": "Mary Johnson",
+    "name": "Priya Gupta",
     "age": 84,
     "gender": "Female",
     "dob": "1942-11-02",
     "education_years": 12,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 17 months.",
@@ -1657,10 +1657,10 @@
     "clinic_location": "Memory & Aging Center, UCSF",
     "current_stage": 1,
     "stage_name": "Stage 1: Cognitive & Genetic Screening",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.07,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "132/73 mmHg",
       "pulse": 84,
@@ -1694,7 +1694,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -1721,7 +1721,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.122)",
+          "name": "Aβ42/Aβ40 Ratio (0.122)",
           "val": "-0.14",
           "desc": "Amyloid pathology indicator"
         },
@@ -1747,7 +1747,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.14 cm\u00b3)",
+          "name": "Hippocampal Volume (4.14 cm³)",
           "val": "-0.2",
           "desc": "Automated medial temporal volumetry"
         },
@@ -1796,7 +1796,7 @@
         "hippocampus_cm3": 4.39,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -1828,13 +1828,13 @@
   {
     "id": "ADNI_081_S_4011",
     "mrn": "GE-ADNI-4011",
-    "name": "Patricia Moore",
+    "name": "Nisha Malhotra",
     "age": 62,
     "gender": "Female",
     "dob": "1964-02-25",
     "education_years": 18,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 10 months.",
@@ -1842,10 +1842,10 @@
     "clinic_location": "GE Memory Clinic & Molecular Imaging Suite",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.22,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "124/73 mmHg",
       "pulse": 82,
@@ -1879,7 +1879,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -1906,7 +1906,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.108)",
+          "name": "Aβ42/Aβ40 Ratio (0.108)",
           "val": "-0.08",
           "desc": "Amyloid pathology indicator"
         },
@@ -1932,7 +1932,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.11 cm\u00b3)",
+          "name": "Hippocampal Volume (4.11 cm³)",
           "val": "-0.18",
           "desc": "Automated medial temporal volumetry"
         },
@@ -1981,7 +1981,7 @@
         "hippocampus_cm3": 4.36,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -2013,13 +2013,13 @@
   {
     "id": "ADNI_022_S_4012",
     "mrn": "GE-ADNI-4012",
-    "name": "Alice Harris",
+    "name": "Riya Iyer",
     "age": 63,
     "gender": "Female",
     "dob": "1963-10-03",
     "education_years": 14,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Primary Care Screening",
     "complaint": "Patient and family note gradual cognitive changes over 23 months.",
@@ -2027,7 +2027,7 @@
     "clinic_location": "Johns Hopkins Precision Alzheimer's Hub",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "Established AD \u00b7 Multi-Disciplinary Care",
+    "status": "Established AD · Multi-Disciplinary Care",
     "risk_score": 0.93,
     "progression24m": 1,
     "velocity": "Advanced Neurodegeneration",
@@ -2064,7 +2064,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -2091,7 +2091,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.065)",
+          "name": "Aβ42/Aβ40 Ratio (0.065)",
           "val": "+0.11",
           "desc": "Amyloid pathology indicator"
         },
@@ -2117,7 +2117,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (2.96 cm\u00b3)",
+          "name": "Hippocampal Volume (2.96 cm³)",
           "val": "+0.33",
           "desc": "Automated medial temporal volumetry"
         },
@@ -2166,7 +2166,7 @@
         "hippocampus_cm3": 3.21,
         "centiloids": 72.2,
         "risk_score": 0.73,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -2198,13 +2198,13 @@
   {
     "id": "ADNI_066_S_4013",
     "mrn": "GE-ADNI-4013",
-    "name": "Sarah Williams",
+    "name": "Lakshmi Nair",
     "age": 65,
     "gender": "Female",
     "dob": "1961-12-18",
     "education_years": 12,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 23 months.",
@@ -2212,10 +2212,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 1",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.09,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "120/76 mmHg",
       "pulse": 81,
@@ -2249,7 +2249,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -2276,7 +2276,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.112)",
+          "name": "Aβ42/Aβ40 Ratio (0.112)",
           "val": "-0.1",
           "desc": "Amyloid pathology indicator"
         },
@@ -2302,7 +2302,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.29 cm\u00b3)",
+          "name": "Hippocampal Volume (4.29 cm³)",
           "val": "-0.27",
           "desc": "Automated medial temporal volumetry"
         },
@@ -2351,7 +2351,7 @@
         "hippocampus_cm3": 4.54,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -2383,13 +2383,13 @@
   {
     "id": "ADNI_039_S_4014",
     "mrn": "GE-ADNI-4014",
-    "name": "Walter Brown",
+    "name": "Arjun Rao",
     "age": 69,
     "gender": "Male",
     "dob": "1957-03-26",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 6 months.",
@@ -2397,10 +2397,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 2",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "High Amyloid \u00b7 Stage 4 Evaluation",
+    "status": "High Amyloid · Stage 4 Evaluation",
     "risk_score": 0.77,
     "progression24m": 1,
-    "velocity": "Rapid Converter (\u0394MMSE -2.5/yr)",
+    "velocity": "Rapid Converter (ΔMMSE -2.5/yr)",
     "vitals": {
       "bp": "130/82 mmHg",
       "pulse": 72,
@@ -2434,7 +2434,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -2461,7 +2461,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.07)",
+          "name": "Aβ42/Aβ40 Ratio (0.07)",
           "val": "+0.09",
           "desc": "Amyloid pathology indicator"
         },
@@ -2487,7 +2487,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.1 cm\u00b3)",
+          "name": "Hippocampal Volume (3.1 cm³)",
           "val": "+0.27",
           "desc": "Automated medial temporal volumetry"
         },
@@ -2536,7 +2536,7 @@
         "hippocampus_cm3": 3.35,
         "centiloids": 67.8,
         "risk_score": 0.57,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -2568,13 +2568,13 @@
   {
     "id": "ADNI_074_S_4015",
     "mrn": "GE-ADNI-4015",
-    "name": "Amit Rao",
+    "name": "Rohan Mehta",
     "age": 75,
     "gender": "Male",
     "dob": "1951-10-17",
     "education_years": 8,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 19 months.",
@@ -2582,10 +2582,10 @@
     "clinic_location": "Memory & Aging Center, UCSF",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.2,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "140/81 mmHg",
       "pulse": 81,
@@ -2619,7 +2619,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -2646,7 +2646,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.124)",
+          "name": "Aβ42/Aβ40 Ratio (0.124)",
           "val": "-0.15",
           "desc": "Amyloid pathology indicator"
         },
@@ -2672,7 +2672,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.23 cm\u00b3)",
+          "name": "Hippocampal Volume (4.23 cm³)",
           "val": "-0.24",
           "desc": "Automated medial temporal volumetry"
         },
@@ -2721,7 +2721,7 @@
         "hippocampus_cm3": 4.48,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -2753,13 +2753,13 @@
   {
     "id": "ADNI_090_S_4016",
     "mrn": "GE-ADNI-4016",
-    "name": "Samuel Garcia",
+    "name": "Kabir Singh",
     "age": 78,
     "gender": "Male",
     "dob": "1948-08-26",
     "education_years": 18,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 18 months.",
@@ -2767,10 +2767,10 @@
     "clinic_location": "Memory & Aging Center, UCSF",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.13,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "125/76 mmHg",
       "pulse": 84,
@@ -2804,7 +2804,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -2831,7 +2831,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.105)",
+          "name": "Aβ42/Aβ40 Ratio (0.105)",
           "val": "-0.07",
           "desc": "Amyloid pathology indicator"
         },
@@ -2857,7 +2857,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.21 cm\u00b3)",
+          "name": "Hippocampal Volume (4.21 cm³)",
           "val": "-0.23",
           "desc": "Automated medial temporal volumetry"
         },
@@ -2906,7 +2906,7 @@
         "hippocampus_cm3": 4.46,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -2938,13 +2938,13 @@
   {
     "id": "ADNI_079_S_4017",
     "mrn": "GE-ADNI-4017",
-    "name": "Samuel Harris",
+    "name": "Ishaan Gupta",
     "age": 85,
     "gender": "Male",
     "dob": "1941-09-14",
     "education_years": 18,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Primary Care Screening",
     "complaint": "Patient and family note gradual cognitive changes over 10 months.",
@@ -2952,10 +2952,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 2",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "High Amyloid \u00b7 Stage 4 Evaluation",
+    "status": "High Amyloid · Stage 4 Evaluation",
     "risk_score": 0.73,
     "progression24m": 1,
-    "velocity": "Rapid Converter (\u0394MMSE -2.5/yr)",
+    "velocity": "Rapid Converter (ΔMMSE -2.5/yr)",
     "vitals": {
       "bp": "130/76 mmHg",
       "pulse": 70,
@@ -2989,7 +2989,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -3016,7 +3016,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.075)",
+          "name": "Aβ42/Aβ40 Ratio (0.075)",
           "val": "+0.07",
           "desc": "Amyloid pathology indicator"
         },
@@ -3042,7 +3042,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.03 cm\u00b3)",
+          "name": "Hippocampal Volume (3.03 cm³)",
           "val": "+0.3",
           "desc": "Automated medial temporal volumetry"
         },
@@ -3091,7 +3091,7 @@
         "hippocampus_cm3": 3.28,
         "centiloids": 49.7,
         "risk_score": 0.53,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -3123,13 +3123,13 @@
   {
     "id": "ADNI_069_S_4018",
     "mrn": "GE-ADNI-4018",
-    "name": "Gordon Moore",
+    "name": "Dev Malhotra",
     "age": 81,
     "gender": "Male",
     "dob": "1945-04-16",
     "education_years": 12,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 7 months.",
@@ -3137,10 +3137,10 @@
     "clinic_location": "Memory & Aging Center, UCSF",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.12,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "128/78 mmHg",
       "pulse": 78,
@@ -3174,7 +3174,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -3201,7 +3201,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.114)",
+          "name": "Aβ42/Aβ40 Ratio (0.114)",
           "val": "-0.11",
           "desc": "Amyloid pathology indicator"
         },
@@ -3227,7 +3227,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.23 cm\u00b3)",
+          "name": "Hippocampal Volume (4.23 cm³)",
           "val": "-0.24",
           "desc": "Automated medial temporal volumetry"
         },
@@ -3276,7 +3276,7 @@
         "hippocampus_cm3": 4.48,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -3308,13 +3308,13 @@
   {
     "id": "ADNI_083_S_4019",
     "mrn": "GE-ADNI-4019",
-    "name": "Jessica Garcia",
+    "name": "Pooja Joshi",
     "age": 62,
     "gender": "Female",
     "dob": "1964-10-05",
     "education_years": 12,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 18 months.",
@@ -3322,7 +3322,7 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 2",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "Established AD \u00b7 Multi-Disciplinary Care",
+    "status": "Established AD · Multi-Disciplinary Care",
     "risk_score": 0.94,
     "progression24m": 1,
     "velocity": "Advanced Neurodegeneration",
@@ -3359,7 +3359,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -3386,7 +3386,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.069)",
+          "name": "Aβ42/Aβ40 Ratio (0.069)",
           "val": "+0.09",
           "desc": "Amyloid pathology indicator"
         },
@@ -3412,7 +3412,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (2.76 cm\u00b3)",
+          "name": "Hippocampal Volume (2.76 cm³)",
           "val": "+0.42",
           "desc": "Automated medial temporal volumetry"
         },
@@ -3461,7 +3461,7 @@
         "hippocampus_cm3": 3.01,
         "centiloids": 79.3,
         "risk_score": 0.74,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -3493,13 +3493,13 @@
   {
     "id": "ADNI_053_S_4020",
     "mrn": "GE-ADNI-4020",
-    "name": "William Gupta",
+    "name": "Karan Iyer",
     "age": 73,
     "gender": "Male",
     "dob": "1953-11-27",
     "education_years": 14,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Primary Care Screening",
     "complaint": "Patient and family note gradual cognitive changes over 21 months.",
@@ -3507,10 +3507,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 2",
     "current_stage": 3,
     "stage_name": "Stage 3: 3D Volumetric MRI (GE SIGNA)",
-    "status": "Amnestic MCI \u00b7 Close Surveillance",
+    "status": "Amnestic MCI · Close Surveillance",
     "risk_score": 0.52,
     "progression24m": 1,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.0/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.0/yr)",
     "vitals": {
       "bp": "133/78 mmHg",
       "pulse": 75,
@@ -3544,7 +3544,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -3571,7 +3571,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.089)",
+          "name": "Aβ42/Aβ40 Ratio (0.089)",
           "val": "+0.0",
           "desc": "Amyloid pathology indicator"
         },
@@ -3597,7 +3597,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.61 cm\u00b3)",
+          "name": "Hippocampal Volume (3.61 cm³)",
           "val": "+0.04",
           "desc": "Automated medial temporal volumetry"
         },
@@ -3646,7 +3646,7 @@
         "hippocampus_cm3": 3.86,
         "centiloids": 16.0,
         "risk_score": 0.32,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -3678,13 +3678,13 @@
   {
     "id": "ADNI_034_S_4021",
     "mrn": "GE-ADNI-4021",
-    "name": "David Johnson",
+    "name": "Rahul Nair",
     "age": 71,
     "gender": "Male",
     "dob": "1955-04-13",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 21 months.",
@@ -3692,10 +3692,10 @@
     "clinic_location": "Apollo Hospitals Neuro Innovation Wing, Bangalore",
     "current_stage": 3,
     "stage_name": "Stage 3: 3D Volumetric MRI (GE SIGNA)",
-    "status": "Amnestic MCI \u00b7 Close Surveillance",
+    "status": "Amnestic MCI · Close Surveillance",
     "risk_score": 0.57,
     "progression24m": 1,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.0/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.0/yr)",
     "vitals": {
       "bp": "136/88 mmHg",
       "pulse": 83,
@@ -3729,7 +3729,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -3756,7 +3756,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.089)",
+          "name": "Aβ42/Aβ40 Ratio (0.089)",
           "val": "+0.0",
           "desc": "Amyloid pathology indicator"
         },
@@ -3782,7 +3782,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.63 cm\u00b3)",
+          "name": "Hippocampal Volume (3.63 cm³)",
           "val": "+0.03",
           "desc": "Automated medial temporal volumetry"
         },
@@ -3831,7 +3831,7 @@
         "hippocampus_cm3": 3.88,
         "centiloids": 21.9,
         "risk_score": 0.37,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -3863,13 +3863,13 @@
   {
     "id": "ADNI_025_S_4022",
     "mrn": "GE-ADNI-4022",
-    "name": "Mary Jackson",
+    "name": "Saanvi Das",
     "age": 71,
     "gender": "Female",
     "dob": "1955-08-16",
     "education_years": 14,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 13 months.",
@@ -3877,7 +3877,7 @@
     "clinic_location": "Memory & Aging Center, UCSF",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "Established AD \u00b7 Multi-Disciplinary Care",
+    "status": "Established AD · Multi-Disciplinary Care",
     "risk_score": 0.89,
     "progression24m": 1,
     "velocity": "Advanced Neurodegeneration",
@@ -3914,7 +3914,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -3941,7 +3941,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.064)",
+          "name": "Aβ42/Aβ40 Ratio (0.064)",
           "val": "+0.12",
           "desc": "Amyloid pathology indicator"
         },
@@ -3967,7 +3967,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (2.98 cm\u00b3)",
+          "name": "Hippocampal Volume (2.98 cm³)",
           "val": "+0.32",
           "desc": "Automated medial temporal volumetry"
         },
@@ -4016,7 +4016,7 @@
         "hippocampus_cm3": 3.23,
         "centiloids": 98.5,
         "risk_score": 0.69,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -4048,13 +4048,13 @@
   {
     "id": "ADNI_086_S_4023",
     "mrn": "GE-ADNI-4023",
-    "name": "Walter Taylor",
+    "name": "Vikram Joshi",
     "age": 71,
     "gender": "Male",
     "dob": "1955-01-08",
     "education_years": 12,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 20 months.",
@@ -4062,10 +4062,10 @@
     "clinic_location": "Memory & Aging Center, UCSF",
     "current_stage": 1,
     "stage_name": "Stage 1: Cognitive & Genetic Screening",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.18,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "140/81 mmHg",
       "pulse": 76,
@@ -4099,7 +4099,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -4126,7 +4126,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.107)",
+          "name": "Aβ42/Aβ40 Ratio (0.107)",
           "val": "-0.08",
           "desc": "Amyloid pathology indicator"
         },
@@ -4152,7 +4152,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.97 cm\u00b3)",
+          "name": "Hippocampal Volume (3.97 cm³)",
           "val": "-0.12",
           "desc": "Automated medial temporal volumetry"
         },
@@ -4201,7 +4201,7 @@
         "hippocampus_cm3": 4.22,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -4233,13 +4233,13 @@
   {
     "id": "ADNI_068_S_4024",
     "mrn": "GE-ADNI-4024",
-    "name": "Barbara Taylor",
+    "name": "Neha Kapoor",
     "age": 78,
     "gender": "Female",
     "dob": "1948-11-15",
     "education_years": 18,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Primary Care Screening",
     "complaint": "Patient and family note gradual cognitive changes over 16 months.",
@@ -4247,10 +4247,10 @@
     "clinic_location": "GE Memory Clinic & Molecular Imaging Suite",
     "current_stage": 3,
     "stage_name": "Stage 3: 3D Volumetric MRI (GE SIGNA)",
-    "status": "Amnestic MCI \u00b7 Close Surveillance",
+    "status": "Amnestic MCI · Close Surveillance",
     "risk_score": 0.57,
     "progression24m": 1,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.0/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.0/yr)",
     "vitals": {
       "bp": "121/84 mmHg",
       "pulse": 80,
@@ -4284,7 +4284,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -4311,7 +4311,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.094)",
+          "name": "Aβ42/Aβ40 Ratio (0.094)",
           "val": "-0.02",
           "desc": "Amyloid pathology indicator"
         },
@@ -4337,7 +4337,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.78 cm\u00b3)",
+          "name": "Hippocampal Volume (3.78 cm³)",
           "val": "-0.04",
           "desc": "Automated medial temporal volumetry"
         },
@@ -4386,7 +4386,7 @@
         "hippocampus_cm3": 4.03,
         "centiloids": 12.8,
         "risk_score": 0.37,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -4418,13 +4418,13 @@
   {
     "id": "ADNI_041_S_4025",
     "mrn": "GE-ADNI-4025",
-    "name": "William Miller",
+    "name": "Siddharth Das",
     "age": 82,
     "gender": "Male",
     "dob": "1944-10-26",
     "education_years": 12,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 23 months.",
@@ -4432,10 +4432,10 @@
     "clinic_location": "Memory & Aging Center, UCSF",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Amnestic MCI \u00b7 Close Surveillance",
+    "status": "Amnestic MCI · Close Surveillance",
     "risk_score": 0.46,
     "progression24m": 0,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.0/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.0/yr)",
     "vitals": {
       "bp": "124/88 mmHg",
       "pulse": 68,
@@ -4469,7 +4469,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -4496,7 +4496,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.087)",
+          "name": "Aβ42/Aβ40 Ratio (0.087)",
           "val": "+0.01",
           "desc": "Amyloid pathology indicator"
         },
@@ -4522,7 +4522,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.78 cm\u00b3)",
+          "name": "Hippocampal Volume (3.78 cm³)",
           "val": "-0.04",
           "desc": "Automated medial temporal volumetry"
         },
@@ -4571,7 +4571,7 @@
         "hippocampus_cm3": 4.03,
         "centiloids": 15.3,
         "risk_score": 0.26,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -4603,13 +4603,13 @@
   {
     "id": "ADNI_014_S_4026",
     "mrn": "GE-ADNI-4026",
-    "name": "Amit Rao",
+    "name": "Manish Kapoor",
     "age": 79,
     "gender": "Male",
     "dob": "1947-09-13",
     "education_years": 14,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 22 months.",
@@ -4617,10 +4617,10 @@
     "clinic_location": "GE Memory Clinic & Molecular Imaging Suite",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "High Amyloid \u00b7 Stage 4 Evaluation",
+    "status": "High Amyloid · Stage 4 Evaluation",
     "risk_score": 0.88,
     "progression24m": 1,
-    "velocity": "Rapid Converter (\u0394MMSE -2.5/yr)",
+    "velocity": "Rapid Converter (ΔMMSE -2.5/yr)",
     "vitals": {
       "bp": "145/75 mmHg",
       "pulse": 78,
@@ -4654,7 +4654,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -4681,7 +4681,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.078)",
+          "name": "Aβ42/Aβ40 Ratio (0.078)",
           "val": "+0.05",
           "desc": "Amyloid pathology indicator"
         },
@@ -4707,7 +4707,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.3 cm\u00b3)",
+          "name": "Hippocampal Volume (3.3 cm³)",
           "val": "+0.18",
           "desc": "Automated medial temporal volumetry"
         },
@@ -4756,7 +4756,7 @@
         "hippocampus_cm3": 3.55,
         "centiloids": 67.9,
         "risk_score": 0.68,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -4788,13 +4788,13 @@
   {
     "id": "ADNI_055_S_4027",
     "mrn": "GE-ADNI-4027",
-    "name": "Suresh Taylor",
+    "name": "Rajiv Menon",
     "age": 79,
     "gender": "Male",
     "dob": "1947-01-20",
     "education_years": 8,
     "handedness": "Right",
-    "apoe": "\u03b54/\u03b54",
+    "apoe": "ε4/ε4",
     "apoe4_count": 2,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 19 months.",
@@ -4802,7 +4802,7 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 2",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "Established AD \u00b7 Multi-Disciplinary Care",
+    "status": "Established AD · Multi-Disciplinary Care",
     "risk_score": 0.96,
     "progression24m": 1,
     "velocity": "Advanced Neurodegeneration",
@@ -4839,7 +4839,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b54/\u03b54 Allele",
+          "name": "APOE ε4/ε4 Allele",
           "val": "+0.36",
           "desc": "Genetic susceptibility factor"
         },
@@ -4866,7 +4866,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.068)",
+          "name": "Aβ42/Aβ40 Ratio (0.068)",
           "val": "+0.1",
           "desc": "Amyloid pathology indicator"
         },
@@ -4892,7 +4892,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.02 cm\u00b3)",
+          "name": "Hippocampal Volume (3.02 cm³)",
           "val": "+0.31",
           "desc": "Automated medial temporal volumetry"
         },
@@ -4941,7 +4941,7 @@
         "hippocampus_cm3": 3.27,
         "centiloids": 71.4,
         "risk_score": 0.76,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -4973,13 +4973,13 @@
   {
     "id": "ADNI_045_S_4028",
     "mrn": "GE-ADNI-4028",
-    "name": "Gordon Jones",
+    "name": "Anil Kulkarni",
     "age": 64,
     "gender": "Male",
     "dob": "1962-08-12",
     "education_years": 20,
     "handedness": "Right",
-    "apoe": "\u03b54/\u03b54",
+    "apoe": "ε4/ε4",
     "apoe4_count": 2,
     "referral": "Primary Care Screening",
     "complaint": "Patient and family note gradual cognitive changes over 24 months.",
@@ -4987,10 +4987,10 @@
     "clinic_location": "Apollo Hospitals Neuro Innovation Wing, Bangalore",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "High Amyloid \u00b7 Stage 4 Evaluation",
+    "status": "High Amyloid · Stage 4 Evaluation",
     "risk_score": 0.85,
     "progression24m": 1,
-    "velocity": "Rapid Converter (\u0394MMSE -2.5/yr)",
+    "velocity": "Rapid Converter (ΔMMSE -2.5/yr)",
     "vitals": {
       "bp": "119/87 mmHg",
       "pulse": 73,
@@ -5024,7 +5024,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b54/\u03b54 Allele",
+          "name": "APOE ε4/ε4 Allele",
           "val": "+0.36",
           "desc": "Genetic susceptibility factor"
         },
@@ -5051,7 +5051,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.073)",
+          "name": "Aβ42/Aβ40 Ratio (0.073)",
           "val": "+0.08",
           "desc": "Amyloid pathology indicator"
         },
@@ -5077,7 +5077,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.31 cm\u00b3)",
+          "name": "Hippocampal Volume (3.31 cm³)",
           "val": "+0.18",
           "desc": "Automated medial temporal volumetry"
         },
@@ -5126,7 +5126,7 @@
         "hippocampus_cm3": 3.56,
         "centiloids": 40.7,
         "risk_score": 0.65,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -5158,13 +5158,13 @@
   {
     "id": "ADNI_019_S_4029",
     "mrn": "GE-ADNI-4029",
-    "name": "Robert Jackson",
+    "name": "Suresh Reddy",
     "age": 73,
     "gender": "Male",
     "dob": "1953-12-05",
     "education_years": 8,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 13 months.",
@@ -5172,10 +5172,10 @@
     "clinic_location": "Apollo Hospitals Neuro Innovation Wing, Bangalore",
     "current_stage": 1,
     "stage_name": "Stage 1: Cognitive & Genetic Screening",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.07,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "139/84 mmHg",
       "pulse": 81,
@@ -5209,7 +5209,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -5236,7 +5236,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.121)",
+          "name": "Aβ42/Aβ40 Ratio (0.121)",
           "val": "-0.14",
           "desc": "Amyloid pathology indicator"
         },
@@ -5262,7 +5262,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.27 cm\u00b3)",
+          "name": "Hippocampal Volume (4.27 cm³)",
           "val": "-0.26",
           "desc": "Automated medial temporal volumetry"
         },
@@ -5311,7 +5311,7 @@
         "hippocampus_cm3": 4.52,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -5343,13 +5343,13 @@
   {
     "id": "ADNI_085_S_4030",
     "mrn": "GE-ADNI-4030",
-    "name": "Walter Davis",
+    "name": "Amit Chatterjee",
     "age": 82,
     "gender": "Male",
     "dob": "1944-02-21",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 19 months.",
@@ -5357,10 +5357,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 1",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Amnestic MCI \u00b7 Close Surveillance",
+    "status": "Amnestic MCI · Close Surveillance",
     "risk_score": 0.51,
     "progression24m": 1,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.0/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.0/yr)",
     "vitals": {
       "bp": "144/87 mmHg",
       "pulse": 83,
@@ -5394,7 +5394,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -5421,7 +5421,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.088)",
+          "name": "Aβ42/Aβ40 Ratio (0.088)",
           "val": "+0.01",
           "desc": "Amyloid pathology indicator"
         },
@@ -5447,7 +5447,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.65 cm\u00b3)",
+          "name": "Hippocampal Volume (3.65 cm³)",
           "val": "+0.02",
           "desc": "Automated medial temporal volumetry"
         },
@@ -5496,7 +5496,7 @@
         "hippocampus_cm3": 3.9,
         "centiloids": 26.0,
         "risk_score": 0.31,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -5528,13 +5528,13 @@
   {
     "id": "ADNI_028_S_4031",
     "mrn": "GE-ADNI-4031",
-    "name": "Margaret Johnson",
+    "name": "Anjali Menon",
     "age": 83,
     "gender": "Female",
     "dob": "1943-04-21",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 23 months.",
@@ -5542,10 +5542,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 2",
     "current_stage": 1,
     "stage_name": "Stage 1: Cognitive & Genetic Screening",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.1,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "121/72 mmHg",
       "pulse": 68,
@@ -5579,7 +5579,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -5606,7 +5606,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.121)",
+          "name": "Aβ42/Aβ40 Ratio (0.121)",
           "val": "-0.14",
           "desc": "Amyloid pathology indicator"
         },
@@ -5632,7 +5632,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.29 cm\u00b3)",
+          "name": "Hippocampal Volume (4.29 cm³)",
           "val": "-0.27",
           "desc": "Automated medial temporal volumetry"
         },
@@ -5681,7 +5681,7 @@
         "hippocampus_cm3": 4.54,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -5713,13 +5713,13 @@
   {
     "id": "ADNI_080_S_4032",
     "mrn": "GE-ADNI-4032",
-    "name": "Grace Smith",
+    "name": "Divya Kulkarni",
     "age": 85,
     "gender": "Female",
     "dob": "1941-11-17",
     "education_years": 12,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 18 months.",
@@ -5727,7 +5727,7 @@
     "clinic_location": "Johns Hopkins Precision Alzheimer's Hub",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "Established AD \u00b7 Multi-Disciplinary Care",
+    "status": "Established AD · Multi-Disciplinary Care",
     "risk_score": 0.94,
     "progression24m": 1,
     "velocity": "Advanced Neurodegeneration",
@@ -5764,7 +5764,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -5791,7 +5791,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.062)",
+          "name": "Aβ42/Aβ40 Ratio (0.062)",
           "val": "+0.13",
           "desc": "Amyloid pathology indicator"
         },
@@ -5817,7 +5817,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (2.75 cm\u00b3)",
+          "name": "Hippocampal Volume (2.75 cm³)",
           "val": "+0.43",
           "desc": "Automated medial temporal volumetry"
         },
@@ -5866,7 +5866,7 @@
         "hippocampus_cm3": 3.0,
         "centiloids": 73.8,
         "risk_score": 0.74,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -5898,13 +5898,13 @@
   {
     "id": "ADNI_095_S_4033",
     "mrn": "GE-ADNI-4033",
-    "name": "Anil Rao",
+    "name": "Varun Bhatia",
     "age": 83,
     "gender": "Male",
     "dob": "1943-05-12",
     "education_years": 20,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 7 months.",
@@ -5912,10 +5912,10 @@
     "clinic_location": "Johns Hopkins Precision Alzheimer's Hub",
     "current_stage": 1,
     "stage_name": "Stage 1: Cognitive & Genetic Screening",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.11,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "127/83 mmHg",
       "pulse": 67,
@@ -5949,7 +5949,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -5976,7 +5976,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.115)",
+          "name": "Aβ42/Aβ40 Ratio (0.115)",
           "val": "-0.11",
           "desc": "Amyloid pathology indicator"
         },
@@ -6002,7 +6002,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.06 cm\u00b3)",
+          "name": "Hippocampal Volume (4.06 cm³)",
           "val": "-0.16",
           "desc": "Automated medial temporal volumetry"
         },
@@ -6051,7 +6051,7 @@
         "hippocampus_cm3": 4.31,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -6083,13 +6083,13 @@
   {
     "id": "ADNI_049_S_4034",
     "mrn": "GE-ADNI-4034",
-    "name": "Grace Verma",
+    "name": "Sunita Reddy",
     "age": 62,
     "gender": "Female",
     "dob": "1964-03-09",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 24 months.",
@@ -6097,10 +6097,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 1",
     "current_stage": 1,
     "stage_name": "Stage 1: Cognitive & Genetic Screening",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.08,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "119/76 mmHg",
       "pulse": 69,
@@ -6134,7 +6134,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -6161,7 +6161,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.124)",
+          "name": "Aβ42/Aβ40 Ratio (0.124)",
           "val": "-0.15",
           "desc": "Amyloid pathology indicator"
         },
@@ -6187,7 +6187,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.09 cm\u00b3)",
+          "name": "Hippocampal Volume (4.09 cm³)",
           "val": "-0.18",
           "desc": "Automated medial temporal volumetry"
         },
@@ -6236,7 +6236,7 @@
         "hippocampus_cm3": 4.34,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -6268,13 +6268,13 @@
   {
     "id": "ADNI_055_S_4035",
     "mrn": "GE-ADNI-4035",
-    "name": "Robert Davis",
+    "name": "Nikhil Desai",
     "age": 74,
     "gender": "Male",
     "dob": "1952-10-02",
     "education_years": 4,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Primary Care Screening",
     "complaint": "Patient and family note gradual cognitive changes over 18 months.",
@@ -6282,10 +6282,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 1",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.16,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "131/72 mmHg",
       "pulse": 78,
@@ -6319,7 +6319,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -6346,7 +6346,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.112)",
+          "name": "Aβ42/Aβ40 Ratio (0.112)",
           "val": "-0.1",
           "desc": "Amyloid pathology indicator"
         },
@@ -6372,7 +6372,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.02 cm\u00b3)",
+          "name": "Hippocampal Volume (4.02 cm³)",
           "val": "-0.14",
           "desc": "Automated medial temporal volumetry"
         },
@@ -6421,7 +6421,7 @@
         "hippocampus_cm3": 4.27,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -6453,13 +6453,13 @@
   {
     "id": "ADNI_035_S_4036",
     "mrn": "GE-ADNI-4036",
-    "name": "Jessica Gupta",
+    "name": "Aditi Chatterjee",
     "age": 80,
     "gender": "Female",
     "dob": "1946-07-17",
     "education_years": 8,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 10 months.",
@@ -6467,10 +6467,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 1",
     "current_stage": 1,
     "stage_name": "Stage 1: Cognitive & Genetic Screening",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.07,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "123/87 mmHg",
       "pulse": 78,
@@ -6504,7 +6504,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -6531,7 +6531,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.11)",
+          "name": "Aβ42/Aβ40 Ratio (0.11)",
           "val": "-0.09",
           "desc": "Amyloid pathology indicator"
         },
@@ -6557,7 +6557,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.31 cm\u00b3)",
+          "name": "Hippocampal Volume (4.31 cm³)",
           "val": "-0.27",
           "desc": "Automated medial temporal volumetry"
         },
@@ -6606,7 +6606,7 @@
         "hippocampus_cm3": 4.56,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -6638,13 +6638,13 @@
   {
     "id": "ADNI_087_S_4037",
     "mrn": "GE-ADNI-4037",
-    "name": "Ananya Thomas",
+    "name": "Radhika Bhatia",
     "age": 64,
     "gender": "Female",
     "dob": "1962-05-15",
     "education_years": 14,
     "handedness": "Left",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 22 months.",
@@ -6652,10 +6652,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 1",
     "current_stage": 1,
     "stage_name": "Stage 1: Cognitive & Genetic Screening",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.08,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "132/75 mmHg",
       "pulse": 74,
@@ -6689,7 +6689,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -6716,7 +6716,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.124)",
+          "name": "Aβ42/Aβ40 Ratio (0.124)",
           "val": "-0.15",
           "desc": "Amyloid pathology indicator"
         },
@@ -6742,7 +6742,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.35 cm\u00b3)",
+          "name": "Hippocampal Volume (4.35 cm³)",
           "val": "-0.29",
           "desc": "Automated medial temporal volumetry"
         },
@@ -6791,7 +6791,7 @@
         "hippocampus_cm3": 4.6,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -6823,13 +6823,13 @@
   {
     "id": "ADNI_049_S_4038",
     "mrn": "GE-ADNI-4038",
-    "name": "James Rao",
+    "name": "Sameer Khanna",
     "age": 65,
     "gender": "Male",
     "dob": "1961-09-22",
     "education_years": 14,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 16 months.",
@@ -6837,7 +6837,7 @@
     "clinic_location": "Apollo Hospitals Neuro Innovation Wing, Bangalore",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "Established AD \u00b7 Multi-Disciplinary Care",
+    "status": "Established AD · Multi-Disciplinary Care",
     "risk_score": 0.95,
     "progression24m": 1,
     "velocity": "Advanced Neurodegeneration",
@@ -6874,7 +6874,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -6901,7 +6901,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.069)",
+          "name": "Aβ42/Aβ40 Ratio (0.069)",
           "val": "+0.09",
           "desc": "Amyloid pathology indicator"
         },
@@ -6927,7 +6927,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (2.93 cm\u00b3)",
+          "name": "Hippocampal Volume (2.93 cm³)",
           "val": "+0.35",
           "desc": "Automated medial temporal volumetry"
         },
@@ -6976,7 +6976,7 @@
         "hippocampus_cm3": 3.18,
         "centiloids": 73.9,
         "risk_score": 0.75,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -7008,13 +7008,13 @@
   {
     "id": "ADNI_070_S_4039",
     "mrn": "GE-ADNI-4039",
-    "name": "Priya Harris",
+    "name": "Sneha Desai",
     "age": 66,
     "gender": "Female",
     "dob": "1960-10-13",
     "education_years": 12,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 17 months.",
@@ -7022,10 +7022,10 @@
     "clinic_location": "Johns Hopkins Precision Alzheimer's Hub",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Amnestic MCI \u00b7 Close Surveillance",
+    "status": "Amnestic MCI · Close Surveillance",
     "risk_score": 0.47,
     "progression24m": 0,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.0/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.0/yr)",
     "vitals": {
       "bp": "132/86 mmHg",
       "pulse": 73,
@@ -7059,7 +7059,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -7086,7 +7086,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.088)",
+          "name": "Aβ42/Aβ40 Ratio (0.088)",
           "val": "+0.01",
           "desc": "Amyloid pathology indicator"
         },
@@ -7112,7 +7112,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.8 cm\u00b3)",
+          "name": "Hippocampal Volume (3.8 cm³)",
           "val": "-0.04",
           "desc": "Automated medial temporal volumetry"
         },
@@ -7161,7 +7161,7 @@
         "hippocampus_cm3": 4.05,
         "centiloids": 16.0,
         "risk_score": 0.27,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -7193,13 +7193,13 @@
   {
     "id": "ADNI_093_S_4040",
     "mrn": "GE-ADNI-4040",
-    "name": "James Jones",
+    "name": "Harish Pillai",
     "age": 70,
     "gender": "Male",
     "dob": "1956-08-17",
     "education_years": 12,
     "handedness": "Right",
-    "apoe": "\u03b54/\u03b54",
+    "apoe": "ε4/ε4",
     "apoe4_count": 2,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 10 months.",
@@ -7207,10 +7207,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 1",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.07,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "127/87 mmHg",
       "pulse": 68,
@@ -7244,7 +7244,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b54/\u03b54 Allele",
+          "name": "APOE ε4/ε4 Allele",
           "val": "+0.36",
           "desc": "Genetic susceptibility factor"
         },
@@ -7271,7 +7271,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.111)",
+          "name": "Aβ42/Aβ40 Ratio (0.111)",
           "val": "-0.09",
           "desc": "Amyloid pathology indicator"
         },
@@ -7297,7 +7297,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.01 cm\u00b3)",
+          "name": "Hippocampal Volume (4.01 cm³)",
           "val": "-0.14",
           "desc": "Automated medial temporal volumetry"
         },
@@ -7346,7 +7346,7 @@
         "hippocampus_cm3": 4.26,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -7378,13 +7378,13 @@
   {
     "id": "ADNI_059_S_4041",
     "mrn": "GE-ADNI-4041",
-    "name": "Walter Anderson",
+    "name": "Akash Banerjee",
     "age": 64,
     "gender": "Male",
     "dob": "1962-02-27",
     "education_years": 18,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Neurology Consult",
     "complaint": "Patient and family note gradual cognitive changes over 7 months.",
@@ -7392,10 +7392,10 @@
     "clinic_location": "Memory & Aging Center, UCSF",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Amnestic MCI \u00b7 Close Surveillance",
+    "status": "Amnestic MCI · Close Surveillance",
     "risk_score": 0.37,
     "progression24m": 0,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.0/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.0/yr)",
     "vitals": {
       "bp": "129/80 mmHg",
       "pulse": 64,
@@ -7429,7 +7429,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -7456,7 +7456,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.088)",
+          "name": "Aβ42/Aβ40 Ratio (0.088)",
           "val": "+0.01",
           "desc": "Amyloid pathology indicator"
         },
@@ -7482,7 +7482,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.53 cm\u00b3)",
+          "name": "Hippocampal Volume (3.53 cm³)",
           "val": "+0.08",
           "desc": "Automated medial temporal volumetry"
         },
@@ -7531,7 +7531,7 @@
         "hippocampus_cm3": 3.78,
         "centiloids": 26.5,
         "risk_score": 0.17,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -7563,13 +7563,13 @@
   {
     "id": "ADNI_025_S_4042",
     "mrn": "GE-ADNI-4042",
-    "name": "Richard Brown",
+    "name": "Pranav Shah",
     "age": 64,
     "gender": "Male",
     "dob": "1962-12-25",
     "education_years": 18,
     "handedness": "Left",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 19 months.",
@@ -7577,10 +7577,10 @@
     "clinic_location": "Apollo Hospitals Neuro Innovation Wing, Bangalore",
     "current_stage": 3,
     "stage_name": "Stage 3: 3D Volumetric MRI (GE SIGNA)",
-    "status": "High Amyloid \u00b7 Stage 4 Evaluation",
+    "status": "High Amyloid · Stage 4 Evaluation",
     "risk_score": 0.81,
     "progression24m": 1,
-    "velocity": "Rapid Converter (\u0394MMSE -2.5/yr)",
+    "velocity": "Rapid Converter (ΔMMSE -2.5/yr)",
     "vitals": {
       "bp": "132/84 mmHg",
       "pulse": 74,
@@ -7614,7 +7614,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -7641,7 +7641,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.069)",
+          "name": "Aβ42/Aβ40 Ratio (0.069)",
           "val": "+0.09",
           "desc": "Amyloid pathology indicator"
         },
@@ -7667,7 +7667,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.39 cm\u00b3)",
+          "name": "Hippocampal Volume (3.39 cm³)",
           "val": "+0.14",
           "desc": "Automated medial temporal volumetry"
         },
@@ -7716,7 +7716,7 @@
         "hippocampus_cm3": 3.64,
         "centiloids": 41.6,
         "risk_score": 0.61,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -7748,13 +7748,13 @@
   {
     "id": "ADNI_066_S_4043",
     "mrn": "GE-ADNI-4043",
-    "name": "Samuel Harris",
+    "name": "Deepak Mishra",
     "age": 84,
     "gender": "Male",
     "dob": "1942-07-06",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Primary Care Screening",
     "complaint": "Patient and family note gradual cognitive changes over 10 months.",
@@ -7762,10 +7762,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 2",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "High Amyloid \u00b7 Stage 4 Evaluation",
+    "status": "High Amyloid · Stage 4 Evaluation",
     "risk_score": 0.85,
     "progression24m": 1,
-    "velocity": "Rapid Converter (\u0394MMSE -2.5/yr)",
+    "velocity": "Rapid Converter (ΔMMSE -2.5/yr)",
     "vitals": {
       "bp": "142/83 mmHg",
       "pulse": 75,
@@ -7799,7 +7799,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -7826,7 +7826,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.074)",
+          "name": "Aβ42/Aβ40 Ratio (0.074)",
           "val": "+0.07",
           "desc": "Amyloid pathology indicator"
         },
@@ -7852,7 +7852,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.07 cm\u00b3)",
+          "name": "Hippocampal Volume (3.07 cm³)",
           "val": "+0.28",
           "desc": "Automated medial temporal volumetry"
         },
@@ -7901,7 +7901,7 @@
         "hippocampus_cm3": 3.32,
         "centiloids": 41.1,
         "risk_score": 0.65,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -7933,13 +7933,13 @@
   {
     "id": "ADNI_095_S_4044",
     "mrn": "GE-ADNI-4044",
-    "name": "Dorothy Thomas",
+    "name": "Shreya Khanna",
     "age": 74,
     "gender": "Female",
     "dob": "1952-09-04",
     "education_years": 12,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 8 months.",
@@ -7947,7 +7947,7 @@
     "clinic_location": "Johns Hopkins Precision Alzheimer's Hub",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "Established AD \u00b7 Multi-Disciplinary Care",
+    "status": "Established AD · Multi-Disciplinary Care",
     "risk_score": 0.98,
     "progression24m": 1,
     "velocity": "Advanced Neurodegeneration",
@@ -7984,7 +7984,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -8011,7 +8011,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.056)",
+          "name": "Aβ42/Aβ40 Ratio (0.056)",
           "val": "+0.15",
           "desc": "Amyloid pathology indicator"
         },
@@ -8037,7 +8037,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.05 cm\u00b3)",
+          "name": "Hippocampal Volume (3.05 cm³)",
           "val": "+0.29",
           "desc": "Automated medial temporal volumetry"
         },
@@ -8086,7 +8086,7 @@
         "hippocampus_cm3": 3.3,
         "centiloids": 94.3,
         "risk_score": 0.78,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -8118,13 +8118,13 @@
   {
     "id": "ADNI_065_S_4045",
     "mrn": "GE-ADNI-4045",
-    "name": "Grace Johnson",
+    "name": "Gita Pillai",
     "age": 64,
     "gender": "Female",
     "dob": "1962-05-13",
     "education_years": 20,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Primary Care Screening",
     "complaint": "Patient and family note gradual cognitive changes over 9 months.",
@@ -8132,10 +8132,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 2",
     "current_stage": 3,
     "stage_name": "Stage 3: 3D Volumetric MRI (GE SIGNA)",
-    "status": "High Amyloid \u00b7 Stage 4 Evaluation",
+    "status": "High Amyloid · Stage 4 Evaluation",
     "risk_score": 0.83,
     "progression24m": 1,
-    "velocity": "Rapid Converter (\u0394MMSE -2.5/yr)",
+    "velocity": "Rapid Converter (ΔMMSE -2.5/yr)",
     "vitals": {
       "bp": "127/77 mmHg",
       "pulse": 69,
@@ -8169,7 +8169,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -8196,7 +8196,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.075)",
+          "name": "Aβ42/Aβ40 Ratio (0.075)",
           "val": "+0.07",
           "desc": "Amyloid pathology indicator"
         },
@@ -8222,7 +8222,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.25 cm\u00b3)",
+          "name": "Hippocampal Volume (3.25 cm³)",
           "val": "+0.2",
           "desc": "Automated medial temporal volumetry"
         },
@@ -8271,7 +8271,7 @@
         "hippocampus_cm3": 3.5,
         "centiloids": 60.0,
         "risk_score": 0.63,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -8303,13 +8303,13 @@
   {
     "id": "ADNI_071_S_4046",
     "mrn": "GE-ADNI-4046",
-    "name": "Barbara Harris",
+    "name": "Maya Banerjee",
     "age": 85,
     "gender": "Female",
     "dob": "1941-10-11",
     "education_years": 18,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Self-Referral Memory Concerns",
     "complaint": "Patient and family note gradual cognitive changes over 18 months.",
@@ -8317,10 +8317,10 @@
     "clinic_location": "Memory & Aging Center, UCSF",
     "current_stage": 1,
     "stage_name": "Stage 1: Cognitive & Genetic Screening",
-    "status": "Low Risk \u00b7 Routine Primary Care",
+    "status": "Low Risk · Routine Primary Care",
     "risk_score": 0.21,
     "progression24m": 0,
-    "velocity": "Stable Trajectory (\u0394MMSE 0.0/yr)",
+    "velocity": "Stable Trajectory (ΔMMSE 0.0/yr)",
     "vitals": {
       "bp": "120/73 mmHg",
       "pulse": 69,
@@ -8354,7 +8354,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -8381,7 +8381,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.112)",
+          "name": "Aβ42/Aβ40 Ratio (0.112)",
           "val": "-0.1",
           "desc": "Amyloid pathology indicator"
         },
@@ -8407,7 +8407,7 @@
       "gatingDecision": "INTERMEDIATE_MONITORING",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (4.21 cm\u00b3)",
+          "name": "Hippocampal Volume (4.21 cm³)",
           "val": "-0.23",
           "desc": "Automated medial temporal volumetry"
         },
@@ -8456,7 +8456,7 @@
         "hippocampus_cm3": 4.46,
         "centiloids": 0.0,
         "risk_score": 0.05,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -8488,13 +8488,13 @@
   {
     "id": "ADNI_037_S_4047",
     "mrn": "GE-ADNI-4047",
-    "name": "Sarah Anderson",
+    "name": "Tara Shah",
     "age": 69,
     "gender": "Female",
     "dob": "1957-03-04",
     "education_years": 8,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b54",
+    "apoe": "ε3/ε4",
     "apoe4_count": 1,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 7 months.",
@@ -8502,10 +8502,10 @@
     "clinic_location": "GE Memory Clinic & Molecular Imaging Suite",
     "current_stage": 2,
     "stage_name": "Stage 2: Plasma Proteomics",
-    "status": "Amnestic MCI \u00b7 Close Surveillance",
+    "status": "Amnestic MCI · Close Surveillance",
     "risk_score": 0.47,
     "progression24m": 0,
-    "velocity": "Moderate Velocity (\u0394MMSE -1.0/yr)",
+    "velocity": "Moderate Velocity (ΔMMSE -1.0/yr)",
     "vitals": {
       "bp": "133/87 mmHg",
       "pulse": 73,
@@ -8539,7 +8539,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b54 Allele",
+          "name": "APOE ε3/ε4 Allele",
           "val": "+0.2",
           "desc": "Genetic susceptibility factor"
         },
@@ -8566,7 +8566,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.092)",
+          "name": "Aβ42/Aβ40 Ratio (0.092)",
           "val": "-0.01",
           "desc": "Amyloid pathology indicator"
         },
@@ -8592,7 +8592,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.51 cm\u00b3)",
+          "name": "Hippocampal Volume (3.51 cm³)",
           "val": "+0.09",
           "desc": "Automated medial temporal volumetry"
         },
@@ -8641,7 +8641,7 @@
         "hippocampus_cm3": 3.76,
         "centiloids": 25.9,
         "risk_score": 0.27,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -8673,13 +8673,13 @@
   {
     "id": "ADNI_051_S_4048",
     "mrn": "GE-ADNI-4048",
-    "name": "Walter Harris",
+    "name": "Mohan Shetty",
     "age": 65,
     "gender": "Male",
     "dob": "1961-03-04",
     "education_years": 14,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 11 months.",
@@ -8687,7 +8687,7 @@
     "clinic_location": "Johns Hopkins Precision Alzheimer's Hub",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "Established AD \u00b7 Multi-Disciplinary Care",
+    "status": "Established AD · Multi-Disciplinary Care",
     "risk_score": 0.97,
     "progression24m": 1,
     "velocity": "Advanced Neurodegeneration",
@@ -8724,7 +8724,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -8751,7 +8751,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.056)",
+          "name": "Aβ42/Aβ40 Ratio (0.056)",
           "val": "+0.15",
           "desc": "Amyloid pathology indicator"
         },
@@ -8777,7 +8777,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (2.88 cm\u00b3)",
+          "name": "Hippocampal Volume (2.88 cm³)",
           "val": "+0.37",
           "desc": "Automated medial temporal volumetry"
         },
@@ -8826,7 +8826,7 @@
         "hippocampus_cm3": 3.13,
         "centiloids": 74.5,
         "risk_score": 0.77,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -8858,13 +8858,13 @@
   {
     "id": "ADNI_070_S_4049",
     "mrn": "GE-ADNI-4049",
-    "name": "Daniel Jackson",
+    "name": "Yash Agarwal",
     "age": 80,
     "gender": "Male",
     "dob": "1946-04-24",
     "education_years": 8,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Primary Care Screening",
     "complaint": "Patient and family note gradual cognitive changes over 10 months.",
@@ -8872,10 +8872,10 @@
     "clinic_location": "GE Healthcare Precision Neuro Center, Bay 2",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "High Amyloid \u00b7 Stage 4 Evaluation",
+    "status": "High Amyloid · Stage 4 Evaluation",
     "risk_score": 0.76,
     "progression24m": 1,
-    "velocity": "Rapid Converter (\u0394MMSE -2.5/yr)",
+    "velocity": "Rapid Converter (ΔMMSE -2.5/yr)",
     "vitals": {
       "bp": "135/82 mmHg",
       "pulse": 79,
@@ -8909,7 +8909,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -8936,7 +8936,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.07)",
+          "name": "Aβ42/Aβ40 Ratio (0.07)",
           "val": "+0.09",
           "desc": "Amyloid pathology indicator"
         },
@@ -8962,7 +8962,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.07 cm\u00b3)",
+          "name": "Hippocampal Volume (3.07 cm³)",
           "val": "+0.28",
           "desc": "Automated medial temporal volumetry"
         },
@@ -9011,7 +9011,7 @@
         "hippocampus_cm3": 3.32,
         "centiloids": 63.5,
         "risk_score": 0.56,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",
@@ -9043,13 +9043,13 @@
   {
     "id": "ADNI_020_S_4050",
     "mrn": "GE-ADNI-4050",
-    "name": "Karen Patel",
+    "name": "Deepa Mishra",
     "age": 84,
     "gender": "Female",
     "dob": "1942-04-23",
     "education_years": 16,
     "handedness": "Right",
-    "apoe": "\u03b53/\u03b53",
+    "apoe": "ε3/ε3",
     "apoe4_count": 0,
     "referral": "Geriatric Assessment Clinic",
     "complaint": "Patient and family note gradual cognitive changes over 20 months.",
@@ -9057,7 +9057,7 @@
     "clinic_location": "GE Memory Clinic & Molecular Imaging Suite",
     "current_stage": 4,
     "stage_name": "Stage 4: Molecular Amyloid PET & DMT Selection (GE Omni Legend)",
-    "status": "Established AD \u00b7 Multi-Disciplinary Care",
+    "status": "Established AD · Multi-Disciplinary Care",
     "risk_score": 0.91,
     "progression24m": 1,
     "velocity": "Advanced Neurodegeneration",
@@ -9094,7 +9094,7 @@
           "desc": "Executive and memory assessment"
         },
         {
-          "name": "APOE \u03b53/\u03b53 Allele",
+          "name": "APOE ε3/ε3 Allele",
           "val": "-0.04",
           "desc": "Genetic susceptibility factor"
         },
@@ -9121,7 +9121,7 @@
           "desc": "Specific phosphorylated tau assay"
         },
         {
-          "name": "A\u03b242/A\u03b240 Ratio (0.061)",
+          "name": "Aβ42/Aβ40 Ratio (0.061)",
           "val": "+0.13",
           "desc": "Amyloid pathology indicator"
         },
@@ -9147,7 +9147,7 @@
       "gatingDecision": "ESCALATE_TO_STAGE_4",
       "shapDrivers": [
         {
-          "name": "Hippocampal Volume (3.03 cm\u00b3)",
+          "name": "Hippocampal Volume (3.03 cm³)",
           "val": "+0.3",
           "desc": "Automated medial temporal volumetry"
         },
@@ -9196,7 +9196,7 @@
         "hippocampus_cm3": 3.28,
         "centiloids": 94.1,
         "risk_score": 0.71,
-        "stage_dx": "Stage 1 Intake \u00b7 Baseline"
+        "stage_dx": "Stage 1 Intake · Baseline"
       },
       {
         "visit_code": "M12",

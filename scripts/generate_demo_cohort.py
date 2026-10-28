@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-StepWise: High-Fidelity Demo Patient & Spotlight Cohort Generator
+Smriti: High-Fidelity Demo Patient & Spotlight Cohort Generator
 Generates realistic patient dossiers with longitudinal visits, raw biomarkers,
 SHAP risk drivers, and CDS recommendations for the clinician command center.
 """
@@ -19,7 +19,7 @@ BACKEND_DATA.mkdir(parents=True, exist_ok=True)
 
 
 def generate_cohort():
-    print("Generating StepWise Clinician Command Center Demo Cohort...")
+    print("Generating Smriti Clinician Command Center Demo Cohort...")
     
     # Load Stage 4 dataset to get full multimodal records
     df = pd.read_parquet(PROCESSED_DIR / "stage4_pet.parquet")

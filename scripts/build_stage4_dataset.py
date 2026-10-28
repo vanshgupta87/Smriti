@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-StepWise: Stage 4 Master Molecular PET & DMT/ARIA Safety Dataset Builder
+Smriti: Stage 4 Master Molecular PET & DMT/ARIA Safety Dataset Builder
 Merges Stage 3 multimodal features (Cognitive, 7 Biofluid Assays, APOE4, MRI Volumetrics, WMH)
 with UC Berkeley Amyloid PET Centiloids and Tau PET SUVR.
 Computes DMT Eligibility criteria and ARIA-E/H clinical safety indices.
@@ -82,7 +82,7 @@ def load_tau_pet():
 
 def main():
     print("=" * 70)
-    print("STEPWISE: BUILDING STAGE 4 MOLECULAR PET & DMT READINESS DATASET")
+    print("SMRITI: BUILDING STAGE 4 MOLECULAR PET & DMT READINESS DATASET")
     print("=" * 70)
     
     if not STAGE3_PARQUET.exists():

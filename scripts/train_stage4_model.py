@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-StepWise: Stage 4 Molecular PET & DMT/ARIA Readiness XGBoost Model Training
+Smriti: Stage 4 Molecular PET & DMT/ARIA Readiness XGBoost Model Training
 Trains a calibrated multimodal XGBoost model for 24-month rapid progression
 incorporating Amyloid Centiloids, Tau Braak SUVR, Hippocampal ICV, and Plasma p-tau217.
 Saves model artifacts, SHAP explainers, and evaluation figures.
@@ -38,7 +38,7 @@ N_SPLITS = 5
 
 def load_and_prep_data():
     print("=" * 70)
-    print("STEPWISE: LOADING STAGE 4 MOLECULAR PET & DMT DATASET")
+    print("SMRITI: LOADING STAGE 4 MOLECULAR PET & DMT DATASET")
     print("=" * 70)
     
     if not DATA_PATH.exists():
@@ -151,12 +151,14 @@ def train_cv_and_calibrate(dev_df, feature_cols):
     cal_brier = brier_score_loss(y, cal_oof_preds)
     print(f"Calibration Brier Loss: {cal_brier:.4f}")
     
-    return base_model, calibrator, mean_auc, std_auc
+    return base_model, calibrator, mean_auc, std_auc, cal_oof_preds
 
 
-def evaluate_and_generate_plots(model, calibrator, holdout_df, feature_cols, mean_cv_auc, std_cv_auc):
+def evaluate_and_generate_plots(
+    model, calibrator, holdout_df, feature_cols, mean_cv_auc, std_cv_auc, optimal_threshold
+):
     print("\n" + "=" * 70)
-    print("STEPWISE: STAGE 4 EVALUATION ON PATIENT HOLDOUT")
+    print("SMRITI: STAGE 4 EVALUATION ON PATIENT HOLDOUT")
     print("=" * 70)
     
     X_test = holdout_df[feature_cols].copy()
@@ -170,10 +172,8 @@ def evaluate_and_generate_plots(model, calibrator, holdout_df, feature_cols, mea
     precision, recall, pr_thresh = precision_recall_curve(y_test, cal_probs)
     brier = brier_score_loss(y_test, cal_probs)
     
-    # Optimal T4 threshold
-    j_stat = tpr - fpr
-    opt_idx = np.argmax(j_stat)
-    opt_threshold = float(roc_thresh[opt_idx])
+    opt_threshold = optimal_threshold
+    opt_idx = int(np.argmin(np.abs(roc_thresh - opt_threshold)))
     
     preds_binary = (cal_probs >= opt_threshold).astype(int)
     cm = confusion_matrix(y_test, preds_binary)
@@ -193,7 +193,7 @@ def evaluate_and_generate_plots(model, calibrator, holdout_df, feature_cols, mea
     print(f"Brier Score Loss:            {brier:.4f}")
     
     metrics = {
-        "model_name": "StepWise Stage 4 Molecular PET & ARIA Multimodal XGBoost",
+        "model_name": "Smriti Stage 4 Molecular PET & ARIA Multimodal XGBoost",
         "mean_cv_roc_auc": round(float(mean_cv_auc), 4),
         "std_cv_roc_auc": round(float(std_cv_auc), 4),
         "holdout_roc_auc": round(float(roc_auc), 4),
@@ -212,7 +212,7 @@ def evaluate_and_generate_plots(model, calibrator, holdout_df, feature_cols, mea
     plt.plot(fpr, tpr, color="#0284c7", lw=2.5, label=f"Stage 4 Calibrated XGBoost (AUC = {roc_auc:.3f})")
     plt.plot([0, 1], [0, 1], color="#94a3b8", linestyle="--", lw=1.5, label="Chance")
     plt.scatter([fpr[opt_idx]], [tpr[opt_idx]], color="#e11d48", s=100, zorder=5, label=f"Optimal Gate T4={opt_threshold:.3f}")
-    plt.title("StepWise Stage 4: Molecular PET ROC Curve", fontsize=13, fontweight="bold", pad=12)
+    plt.title("Smriti Stage 4: Molecular PET ROC Curve", fontsize=13, fontweight="bold", pad=12)
     plt.xlabel("False Positive Rate (1 - Specificity)", fontsize=11)
     plt.ylabel("True Positive Rate (Sensitivity)", fontsize=11)
     plt.legend(loc="lower right", frameon=True)
@@ -225,7 +225,7 @@ def evaluate_and_generate_plots(model, calibrator, holdout_df, feature_cols, mea
     plt.figure(figsize=(7, 6))
     plt.plot(recall, precision, color="#059669", lw=2.5, label="Stage 4 PR Curve")
     plt.axhline(y=y_test.mean(), color="#94a3b8", linestyle="--", label=f"Baseline Prevalence ({y_test.mean():.1%})")
-    plt.title("StepWise Stage 4: Precision-Recall Curve", fontsize=13, fontweight="bold", pad=12)
+    plt.title("Smriti Stage 4: Precision-Recall Curve", fontsize=13, fontweight="bold", pad=12)
     plt.xlabel("Recall (Sensitivity)", fontsize=11)
     plt.ylabel("Precision (PPV)", fontsize=11)
     plt.legend(loc="upper right", frameon=True)
@@ -252,7 +252,7 @@ def evaluate_and_generate_plots(model, calibrator, holdout_df, feature_cols, mea
     prog_captured = [(test_eval_df.iloc[:int(d * len(test_eval_df))]["true"].sum() / total_prog) * 100 for d in deciles]
     
     plt.figure(figsize=(7, 5))
-    plt.plot([d * 100 for d in deciles], prog_captured, marker="o", color="#d97706", lw=2.5, label="StepWise Stage 4 Lift")
+    plt.plot([d * 100 for d in deciles], prog_captured, marker="o", color="#d97706", lw=2.5, label="Smriti Stage 4 Lift")
     plt.plot([0, 100], [0, 100], linestyle="--", color="#94a3b8", label="Random Queue")
     plt.title("Stage 4 Prioritization Capacity Lift", fontsize=13, fontweight="bold", pad=12)
     plt.xlabel("Percentage of Patients Screened (%)", fontsize=11)
@@ -270,7 +270,7 @@ def evaluate_and_generate_plots(model, calibrator, holdout_df, feature_cols, mea
     
     plt.figure(figsize=(10, 8))
     shap.summary_plot(shap_values, shap_sample, show=False, max_display=15)
-    plt.title("StepWise Stage 4: SHAP Biomarker Attribution (Centiloids + Tau + Biofluids)", fontsize=13, fontweight="bold", pad=12)
+    plt.title("Smriti Stage 4: SHAP Biomarker Attribution (Centiloids + Tau + Biofluids)", fontsize=13, fontweight="bold", pad=12)
     plt.tight_layout()
     plt.savefig(EVAL_DIR / "shap_summary.png", dpi=300)
     plt.close()
@@ -302,9 +302,15 @@ def evaluate_and_generate_plots(model, calibrator, holdout_df, feature_cols, mea
 def main():
     df, feature_cols = load_and_prep_data()
     dev_df, test_df = temporal_patient_split(df, feature_cols)
-    model, calibrator, mean_auc, std_auc = train_cv_and_calibrate(dev_df, feature_cols)
-    evaluate_and_generate_plots(model, calibrator, test_df, feature_cols, mean_auc, std_auc)
-    print("\n✅ STAGE 4 ENGINE COMPLETE AND FULLY TRAINED!")
+    model, calibrator, mean_auc, std_auc, cal_oof_preds = train_cv_and_calibrate(dev_df, feature_cols)
+    threshold_fpr, threshold_tpr, threshold_values = roc_curve(
+        dev_df["Progression24m"].astype(int).values, cal_oof_preds
+    )
+    optimal_threshold = float(threshold_values[np.argmax(threshold_tpr - threshold_fpr)])
+    evaluate_and_generate_plots(
+        model, calibrator, test_df, feature_cols, mean_auc, std_auc, optimal_threshold
+    )
+    print("\nStage 4 training and evaluation complete.")
 
 
 if __name__ == "__main__":

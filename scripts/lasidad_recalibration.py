@@ -1,5 +1,5 @@
 """
-StepWise: LASI-DAD Demographic Fairness & Recalibration Layer
+Smriti: LASI-DAD Demographic Fairness & Recalibration Layer
 Adjusts cognitive scores for low formal literacy in South Asian elders and adjusts metabolic risk.
 """
 def apply_lasidad_hcap_offset(raw_score: float, education_years: float, test_type: str = "MMSE") -> float:

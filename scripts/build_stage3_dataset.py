@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-StepWise: Stage 3 Master Volumetric MRI Dataset Builder
+Smriti: Stage 3 Master Volumetric MRI Dataset Builder
 Merges Stage 2 multimodal features with UCSD structural brain volumetry,
 FreeSurfer 7 cortical thickness, and UC Davis White Matter Hyperintensities (WMH).
 """
@@ -80,7 +80,7 @@ def load_wmh():
 
 def main():
     print("=" * 70)
-    print("STEPWISE: BUILDING STAGE 3 VOLUMETRIC MRI DATASET")
+    print("SMRITI: BUILDING STAGE 3 VOLUMETRIC MRI DATASET")
     print("=" * 70)
     
     if not STAGE2_PARQUET.exists():

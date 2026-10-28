@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-StepWise: Stage 2 ML Training, Calibration & Explainability Engine
+Smriti: Stage 2 ML Training, Calibration & Explainability Engine
 Trains the Stage 2 Multimodal Biofluid & Genomic XGBoost Enricher with
 Temporal Holdout Validation, Isotonic Calibration, TreeSHAP Explainability,
 and Top-K Prioritization Queue Metrics.
@@ -50,7 +50,7 @@ N_SPLITS = 5
 
 def load_and_prep_data():
     print("=" * 70)
-    print("STEPWISE: LOADING STAGE 2 MULTIMODAL BIOFLUID DATASET")
+    print("SMRITI: LOADING STAGE 2 MULTIMODAL BIOFLUID DATASET")
     print("=" * 70)
     
     if not DATA_PATH.exists():
@@ -62,7 +62,8 @@ def load_and_prep_data():
     
     DROP_COLS = {
         "PTID", "RID", "VISCODE", "VISCODE2", "VISDATE", 
-        "DIAGNOSIS", "Progression24m", "FutureVisitsWithin24m"
+        "DIAGNOSIS", "Progression24m", "FutureVisitsWithin24m",
+        "DMT_Eligibility_Flag"
     }
     
     feature_cols = [c for c in df.columns if c not in DROP_COLS]
@@ -180,7 +181,7 @@ def train_and_cross_validate(dev_df, feature_cols):
     return final_xgb, calibrator, fold_metrics, oof_raw, oof_calibrated
 
 
-def evaluate_temporal_holdout(final_xgb, calibrator, holdout_df, feature_cols):
+def evaluate_temporal_holdout(final_xgb, calibrator, holdout_df, feature_cols, optimal_threshold):
     print("\n" + "=" * 70)
     print("PROSPECTIVE EVALUATION ON UNTOUCHED TEMPORAL HOLDOUT")
     print("=" * 70)
@@ -199,17 +200,16 @@ def evaluate_temporal_holdout(final_xgb, calibrator, holdout_df, feature_cols):
     print(f"Test Temporal PR-AUC  : {test_pr_auc:.4f}")
     print(f"Test Brier Score Loss : {test_brier:.4f}")
     
-    fpr, tpr, thresholds = roc_curve(y_test, cal_probs)
-    j_scores = tpr - fpr
-    opt_idx = np.argmax(j_scores)
-    optimal_threshold = float(thresholds[opt_idx])
-    
+    fpr, tpr, _ = roc_curve(y_test, cal_probs)
     preds_binary = (cal_probs >= optimal_threshold).astype(int)
     cm = confusion_matrix(y_test, preds_binary)
+    tn, fp, fn, tp = cm.ravel()
+    sensitivity = tp / (tp + fn) if tp + fn else 0.0
+    specificity = tn / (tn + fp) if tn + fp else 0.0
     
     print(f"\nOptimal Escalation Threshold (Youden's J): {optimal_threshold:.4f}")
-    print(f"Sensitivity (Recall on True Progressors) : {tpr[opt_idx]:.2%}")
-    print(f"Specificity (Correct Non-Escalations)    : {1 - fpr[opt_idx]:.2%}")
+    print(f"Sensitivity (Recall on True Progressors) : {sensitivity:.2%}")
+    print(f"Specificity (Correct Non-Escalations)    : {specificity:.2%}")
     print("\nConfusion Matrix:")
     print(cm)
     
@@ -241,8 +241,8 @@ def evaluate_temporal_holdout(final_xgb, calibrator, holdout_df, feature_cols):
         "temporal_pr_auc": round(float(test_pr_auc), 4),
         "temporal_brier": round(float(test_brier), 4),
         "optimal_threshold": round(float(optimal_threshold), 4),
-        "sensitivity": round(float(tpr[opt_idx]), 4),
-        "specificity": round(float(1 - fpr[opt_idx]), 4),
+        "sensitivity": round(float(sensitivity), 4),
+        "specificity": round(float(specificity), 4),
         "confusion_matrix": cm.tolist(),
         "topk_prioritization": topk_summary
     }
@@ -264,7 +264,7 @@ def generate_shap_and_visualizations(final_xgb, calibrator, dev_df, holdout_df, 
     # 1. ROC-AUC Curve
     fpr, tpr = roc_data
     plt.figure(figsize=(7, 6))
-    plt.plot(fpr, tpr, color="#4f46e5", lw=2.5, label=f"StepWise Stage 2 (AUC = {metrics['temporal_roc_auc']:.3f})")
+    plt.plot(fpr, tpr, color="#4f46e5", lw=2.5, label=f"Smriti Stage 2 (AUC = {metrics['temporal_roc_auc']:.3f})")
     plt.plot([0, 1], [0, 1], color="#94a3b8", linestyle="--", lw=1.5, label="Random Chance (AUC = 0.500)")
     plt.scatter([1-metrics['specificity']], [metrics['sensitivity']], color="#dc2626", s=100, zorder=5, label=f"Decision Gate (T2={metrics['optimal_threshold']:.2f})")
     plt.title("Stage 2 ROC-AUC: Multimodal Biofluid Holdout", fontsize=13, fontweight="bold", pad=12)
@@ -343,7 +343,13 @@ def main():
     dev_df, holdout_df = temporal_patient_split(df, feature_cols)
     
     final_xgb, calibrator, cv_metrics, oof_raw, oof_calibrated = train_and_cross_validate(dev_df, feature_cols)
-    raw_probs, cal_probs, metrics, roc_data, topk_summary = evaluate_temporal_holdout(final_xgb, calibrator, holdout_df, feature_cols)
+    threshold_fpr, threshold_tpr, threshold_values = roc_curve(
+        dev_df["Progression24m"].astype(int).values, oof_calibrated
+    )
+    optimal_threshold = float(threshold_values[np.argmax(threshold_tpr - threshold_fpr)])
+    raw_probs, cal_probs, metrics, roc_data, topk_summary = evaluate_temporal_holdout(
+        final_xgb, calibrator, holdout_df, feature_cols, optimal_threshold
+    )
     
     generate_shap_and_visualizations(final_xgb, calibrator, dev_df, holdout_df, feature_cols, metrics, roc_data, topk_summary)
     
@@ -364,7 +370,7 @@ def main():
         json.dump(metrics, f, indent=2)
         
     print(f"Stage 2 Model artifacts successfully written to: {MODEL_DIR}")
-    print("\n✅ STAGE 2 ENGINE COMPLETE AND FULLY TRAINED!")
+    print("\nStage 2 training and evaluation complete.")
 
 if __name__ == "__main__":
     main()

@@ -35,7 +35,7 @@ export default function Navbar({
             </div>
             <div>
               <div className="font-extrabold text-base tracking-tight text-white flex items-center gap-1.5 leading-none">
-                StepWise
+                Smriti
                 <span className="text-[10px] font-semibold bg-[#FF9900] text-[#0F1111] px-1.5 py-0.5 rounded">CDS v2.0</span>
               </div>
               <div className="text-[10px] text-[#A6B0B0] mt-0.5">Precision Care Clinical Center</div>
