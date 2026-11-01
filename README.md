@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="Smriti/frontend/public/smriti-logo.png" alt="Smriti logo" width="92" />
+
   <h1>SMRITI</h1>
   <p><strong>Neurological care, connected by context.</strong></p>
   <p>
