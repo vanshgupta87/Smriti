@@ -1,3 +1,4 @@
+import random
 import sqlite3
 import json
 import os
@@ -128,6 +129,23 @@ def init_db():
             cursor.execute(f"ALTER TABLE visits ADD COLUMN {col}")
         except:
             pass
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS inter_hospital_transfers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        transfer_id TEXT UNIQUE NOT NULL,
+        patient_id TEXT NOT NULL,
+        destination_hospital TEXT NOT NULL,
+        urgency_level TEXT DEFAULT 'Urgent',
+        transfer_reason TEXT NOT NULL,
+        clinical_summary TEXT,
+        transferred_by TEXT,
+        transfer_timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+        package_manifest_json TEXT,
+        status TEXT DEFAULT 'Transferred - In Transit',
+        FOREIGN KEY (patient_id) REFERENCES patients(id)
+    );
+    """)
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS stage_escalations (
@@ -738,10 +756,11 @@ def get_patient_timeline_db(patient_id):
         ed = dict(e)
         dec = ed.get("escalation_decision", "escalate")
         dec_labels = {
-            "escalate": f"Escalated → Stage {ed['to_stage']}",
+            "escalate": f"Escalated Stage {ed['to_stage']}",
             "routine": "Returned to Routine Care",
             "more_data": "More Data Requested",
-            "revisit": "Revisit Cycle Initiated"
+            "revisit": "Revisit Cycle Initiated",
+            "inter_hospital_transfer": "Inter-Hospital Referral Dispatched"
         }
         e_ts = ed.get("timestamp") or reg_time
         e_ts_full = f"{e_ts} 14:00:00" if len(str(e_ts)) == 10 else str(e_ts)
@@ -758,6 +777,26 @@ def get_patient_timeline_db(patient_id):
             "color": "green" if dec == "escalate" else ("yellow" if dec == "more_data" else "gray"),
             "doctor": ed.get("doctor_name", ""),
             "can_delete": True,
+        })
+
+    # Transfers matching either canonical_id or canonical_mrn
+    cursor.execute("SELECT * FROM inter_hospital_transfers WHERE patient_id IN (?, ?) ORDER BY id ASC", (canonical_id, canonical_mrn))
+    transfers = cursor.fetchall()
+    for trf in transfers:
+        td = dict(trf)
+        t_ts = td.get("transfer_timestamp") or reg_time
+        events.append({
+            "id": td.get("id"),
+            "transfer_id": td.get("transfer_id"),
+            "type": "transfer",
+            "timestamp": str(t_ts),
+            "display_date": str(t_ts)[:10],
+            "title": f"Inter-Hospital Transfer: {td.get('destination_hospital')}",
+            "detail": f"Urgency: {td.get('urgency_level')} • Reason: {td.get('transfer_reason')} • Ref: {td.get('transfer_id')}",
+            "icon": "share-2",
+            "color": "blue",
+            "doctor": td.get("transferred_by", "Attending Physician"),
+            "can_delete": False,
         })
 
     # Sort all events strictly newest to oldest (DESCENDING)
@@ -913,6 +952,69 @@ def get_analytics_db():
         "escalation_funnel": funnel,
         "top_risk_patients": top_patients
     }
+
+
+
+
+def record_patient_transfer_db(patient_id: str, destination_hospital: str, urgency_level: str, transfer_reason: str, clinical_summary: str, transferred_by: str, manifest_dict: dict):
+    """Records an authorized inter-hospital patient transfer and updates patient location."""
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, mrn, current_stage FROM patients WHERE id = ? OR mrn = ?", (patient_id, patient_id))
+    p = cursor.fetchone()
+    if not p:
+        conn.close()
+        return None
+    actual_pid = p["id"]
+    actual_mrn = p["mrn"] or actual_pid
+    curr_stage = p["current_stage"] or 0
+    now = datetime.now()
+    transfer_id = f"TRF-{now.strftime('%Y%m%d')}-{random.randint(1000, 9999)}"
+
+    # 1. Insert into inter_hospital_transfers
+    cursor.execute("""
+    INSERT INTO inter_hospital_transfers (
+        transfer_id, patient_id, destination_hospital, urgency_level,
+        transfer_reason, clinical_summary, transferred_by, transfer_timestamp,
+        package_manifest_json, status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        transfer_id, actual_pid, destination_hospital, urgency_level,
+        transfer_reason, clinical_summary, transferred_by, now.strftime("%Y-%m-%d %H:%M:%S"),
+        json.dumps(manifest_dict), "Transferred - In Transit"
+    ))
+
+    # 2. Update clinic_location in patients table
+    new_loc = f"{destination_hospital} (Ref: {transfer_id})"
+    cursor.execute("UPDATE patients SET clinic_location = ?, updated_at = ? WHERE id = ? OR mrn = ?",
+                   (new_loc, now.strftime("%Y-%m-%d %H:%M:%S"), actual_pid, actual_mrn))
+
+    # 3. Log in stage_escalations as an audit event
+    cursor.execute("""
+    INSERT INTO stage_escalations (
+        patient_id, from_stage, to_stage, escalation_decision, doctor_name, clinical_rationale
+    ) VALUES (?, ?, ?, 'inter_hospital_transfer', ?, ?)
+    """, (actual_pid, curr_stage, curr_stage, transferred_by, f"Inter-Hospital Referral to {destination_hospital} ({urgency_level}). Reason: {transfer_reason}"))
+
+    conn.commit()
+    conn.close()
+    return transfer_id
+
+def fetch_patient_transfers_db(patient_id: str):
+    """Fetches transfer history for a patient."""
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, mrn FROM patients WHERE id = ? OR mrn = ?", (patient_id, patient_id))
+    p = cursor.fetchone()
+    if not p:
+        conn.close()
+        return []
+    actual_pid = p["id"]
+    actual_mrn = p["mrn"] or actual_pid
+    cursor.execute("SELECT * FROM inter_hospital_transfers WHERE patient_id IN (?, ?) ORDER BY id DESC", (actual_pid, actual_mrn))
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
 
 
 if __name__ == "__main__":

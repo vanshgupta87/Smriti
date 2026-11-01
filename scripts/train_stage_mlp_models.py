@@ -123,9 +123,9 @@ def train_stage_mlp(stage: int, epochs: int = 150, patience: int = 20, lr: float
     groups = dev_df["PTID"].values
     y_dev = dev_df["Progression24m"].astype(int).values
     X_dev = dev_df[feature_cols].copy()
-    
-    pos_count = (y_dev == 1).sum()
-    neg_count = (y_dev == 0).sum()
+    # 1. Dataset mein negative aur positive class count nikalna
+    pos_count = (y_dev == 1).sum() #6%
+    neg_count = (y_dev == 0).sum() #94% 
     pos_weight = torch.tensor([neg_count / max(1, pos_count)], dtype=torch.float32)
     print(f"Class balance: Neg={neg_count}, Pos={pos_count} (Pos Weight: {pos_weight.item():.2f})")
     
@@ -151,7 +151,7 @@ def train_stage_mlp(stage: int, epochs: int = 150, patience: int = 20, lr: float
         
         train_ds = TensorDataset(torch.tensor(X_tr, dtype=torch.float32), torch.tensor(y_tr, dtype=torch.float32))
         train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
-        
+        # Standard BCELoss ke bajaye pos_weight ke sath BCEWithLogitsLoss pass karna
         model = ProgressionMLP(in_features=len(feature_cols)).to(device)
         criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight.to(device))
         optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)

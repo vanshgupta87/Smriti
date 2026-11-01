@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Smriti: Stage 1 ML Training, Calibration & Explainability Engine
-Trains the Stage 1 Calibrated XGBoost Prioritizer with Temporal Validation,
+Trains the Stage 1 Calibrated Prioritizer with Temporal Validation,
 Isotonic Calibration, TreeSHAP Explainability, and Top-K Prioritization Metrics.
 """
 
@@ -119,8 +119,6 @@ def train_and_cross_validate(dev_df, feature_cols):
     neg_count = (y_dev == 0).sum()
     scale_pos = neg_count / max(1, pos_count)
     print(f"Class Imbalance: Neg={neg_count}, Pos={pos_count} (scale_pos_weight={scale_pos:.2f})")
-    
-    # XGBoost Classifier
     base_xgb = XGBClassifier(
         n_estimators=150,
         max_depth=3,

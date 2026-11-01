@@ -374,3 +374,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+# humne research benchmark ke liye pehle XGBoost (Gradient Boosted Trees) ko classical baseline ki tarah train kiya tha. Lekin multi-modal non-linear 
+# biomarker interactions ko capture karne ke liye humne custom PyTorch Multi-Layer Perceptron (MLP)
+# develop kiya, jiska Brier score aur calibration superior tha. Isliye production deployment aur website par humne PyTorch MLP hi active rakha hai."

@@ -65,6 +65,7 @@ export default function SmritiPRO() {
   const [showRevisitModal, setShowRevisitModal] = useState(false)
   const [showPrintModal, setShowPrintModal] = useState(false)
   const [showLsidAdModal, setShowLsidAdModal] = useState(false)
+  const [showTransferModal, setShowTransferModal] = useState(false)
   const [timeline, setTimeline] = useState<any[]>([])
   const [loadingTimeline, setLoadingTimeline] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -388,6 +389,7 @@ export default function SmritiPRO() {
                   onRevisit={() => setShowRevisitModal(true)}
                   onPrint={() => setShowPrintModal(true)}
                   onLsidAd={() => setShowLsidAdModal(true)}
+                  onTransfer={() => setShowTransferModal(true)}
                   onRefresh={async () => {
                     await fetchPatients()
                     await fetchAnalytics()
@@ -470,6 +472,18 @@ export default function SmritiPRO() {
 
       {showPrintModal && selectedPatient && (
         <PrintReportModal patient={selectedPatient} onClose={() => setShowPrintModal(false)} />
+      )}
+
+            {showTransferModal && selectedPatient && (
+        <TransferHospitalModal
+          patient={selectedPatient}
+          onClose={() => setShowTransferModal(false)}
+          onSuccess={async () => {
+            await fetchPatients()
+            if (selectedPatientId) fetchTimeline(selectedPatientId)
+          }}
+          apiBase={API_BASE}
+        />
       )}
 
       {showLsidAdModal && selectedPatient && (
@@ -735,25 +749,25 @@ function DashboardView({ analytics, patients, onPatientClick, onNewPatient, onPr
 
           {/* Active Clinical Triage Worklist */}
           <div className="flex-1 flex flex-col overflow-hidden bg-white rounded-[26px] shadow-[0_8px_30px_rgba(15,23,42,0.045)] border border-[#E8EDF5]">
-            <div className="p-6 border-b border-[#EEF1F6] flex justify-between items-end bg-white/80 backdrop-blur-sm z-10 shrink-0">
-              <div>
-                <h3 className="text-lg font-black text-gray-900 flex items-center gap-3">
+            <div className="p-6 border-b border-[#EEF1F6] flex flex-col gap-4 bg-white/80 backdrop-blur-sm z-10 shrink-0 lg:flex-row lg:items-center lg:justify-between">
+              <div className="min-w-0">
+                <h3 className="text-lg font-black text-gray-900 flex flex-wrap items-center gap-x-3 gap-y-2">
                   Active Clinical Triage Worklist
-                  <span className="bg-gray-100/80 text-gray-600 text-xs px-2.5 py-1 rounded-full font-bold">
+                  <span className="inline-flex shrink-0 items-center whitespace-nowrap bg-gray-100/80 text-gray-600 text-xs px-2.5 py-1 rounded-full font-bold">
                     {filteredQueue.length} Selected Queue
                   </span>
                 </h3>
-                <p className="text-xs text-gray-500 mt-1 font-medium">Select any patient record to dynamically inspect longitudinal trajectory, biomarkers &amp; staging protocols.</p>
+                <p className="max-w-2xl text-xs text-gray-500 mt-1 font-medium">Select any patient record to dynamically inspect longitudinal trajectory, biomarkers &amp; staging protocols.</p>
               </div>
-              <div className="flex gap-3">
-                <div className="relative">
+              <div className="flex flex-wrap items-center gap-3 lg:shrink-0">
+                <div className="relative min-w-[220px] flex-1 sm:flex-none">
                   <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
                     value={queueSearch}
                     onChange={e => setQueueSearch(e.target.value)}
                     placeholder="Filter patient or MRN..."
-                    className="pl-9 pr-4 py-2 text-xs border border-gray-200 rounded-full bg-gray-50 focus:outline-none focus:border-[#1A56DB] focus:ring-2 focus:ring-blue-100 w-56 font-medium transition-all"
+                    className="w-full sm:w-56 pl-9 pr-4 py-2 text-xs border border-gray-200 rounded-full bg-gray-50 focus:outline-none focus:border-[#1A56DB] focus:ring-2 focus:ring-blue-100 font-medium transition-all"
                   />
                 </div>
                 <button
@@ -1606,6 +1620,7 @@ function PatientDossierView({
   onRevisit,
   onPrint,
   onLsidAd,
+  onTransfer,
   onRefresh,
   apiBase
 }: any) {
@@ -1726,7 +1741,7 @@ function PatientDossierView({
           {/* 1. Patient Profile & Clinical Baselines Big Card */}
           <div className="bg-white p-7 rounded-[32px] border border-gray-100 shadow-sm space-y-5">
             {/* Top Bar inside Card */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col gap-4 sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(280px,0.9fr)] sm:items-start sm:gap-5">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="text-[10px] font-black text-[#1A56DB] uppercase tracking-wider bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
@@ -1745,8 +1760,8 @@ function PatientDossierView({
               </div>
 
               {/* Action Buttons: Edit, LASI-DAD, Risk Badge */}
-              <div className="flex flex-wrap items-center gap-2">
-                <div className={`px-3.5 py-2 rounded-xl text-xs font-black flex items-center gap-2 border ${
+              <div className="grid w-full grid-cols-2 gap-2">
+                <div className={`flex min-w-0 items-center justify-center gap-2 rounded-xl border px-3 py-2 text-xs font-black ${
                   isHighRisk ? 'bg-red-50 text-red-700 border-red-100' : isModRisk ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-emerald-50 text-emerald-700 border-emerald-100'
                 }`}>
                   <span className={`w-2 h-2 rounded-full ${isHighRisk ? 'bg-red-500' : isModRisk ? 'bg-amber-500' : 'bg-emerald-500'}`}></span>
@@ -1755,15 +1770,23 @@ function PatientDossierView({
 
                 <button
                   onClick={onLsidAd}
-                  className="flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl text-xs font-bold transition shadow-xs"
+                  className="flex min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-bold text-amber-800 transition shadow-xs hover:bg-amber-100"
                   title="Configure LASI-DAD Indian Population Normative Baseline"
                 >
                   <Globe size={14} /> LASI-DAD Bias
                 </button>
 
                 <button
+                  onClick={onTransfer}
+                  className="col-span-2 flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 px-3.5 py-2 text-xs font-bold text-white transition shadow-sm shadow-blue-700/20 hover:from-blue-600 hover:to-indigo-600"
+                  title="Initiate Inter-Hospital Digital Referral to Tertiary Super-Specialty Center"
+                >
+                  <Share2 size={14} /> Transfer to Tertiary Care
+                </button>
+
+                <button
                   onClick={() => onCallPatient?.(patient)}
-                  className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold transition shadow-sm shadow-emerald-600/20"
+                  className="flex min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-3 py-2 text-xs font-bold text-white transition shadow-sm shadow-emerald-600/20 hover:from-emerald-500 hover:to-teal-500"
                   title="Initiate Direct Video Call with this Patient"
                 >
                   <Video size={14} /> Video Call Patient
@@ -1771,7 +1794,7 @@ function PatientDossierView({
 
                 <button
                   onClick={onEdit}
-                  className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-xl text-xs font-bold transition"
+                  className="flex min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-xs font-bold text-gray-700 transition hover:bg-gray-100"
                 >
                   <Edit3 size={14} /> Edit Profile
                 </button>
@@ -2119,7 +2142,7 @@ function PatientDossierView({
               <h4 className="text-xs font-black text-gray-900">Clinical Brief &amp; Medical Record Export</h4>
               <p className="text-[11px] text-gray-400 font-medium">Generate formatted PDF summary or HL7 FHIR R4 interoperability bundle</p>
             </div>
-            <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <div className="flex w-full flex-wrap items-center justify-start gap-2.5 sm:w-auto sm:justify-end">
               <button
                 onClick={onFhir}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-xl text-xs font-bold transition"
@@ -5192,6 +5215,416 @@ function TumorDetectionView() {
               <p className="font-semibold text-gray-800 mt-0.5">{row.value}</p>
             </div>
           ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// INTER-HOSPITAL TERTIARY CARE TRANSFER MODAL
+// ============================================================
+function TransferHospitalModal({ patient, onClose, onSuccess, apiBase }: any) {
+  const [hospitals, setHospitals] = useState<any[]>([])
+  const [selectedHospital, setSelectedHospital] = useState('')
+  const [urgency, setUrgency] = useState<'Routine' | 'Urgent' | 'Critical'>('Urgent')
+  const [reason, setReason] = useState('Requires Molecular Amyloid PET-CT Scan')
+  const [notes, setNotes] = useState('')
+  const [includeMri, setIncludeMri] = useState(true)
+  const [includeMl, setIncludeMl] = useState(true)
+  const [recipientEmail, setRecipientEmail] = useState('vijaygupta0718@gmail.com')
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([])
+  const [loading, setLoading] = useState(false)
+  const [transferSuccess, setTransferSuccess] = useState<any | null>(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    fetch(`${apiBase}/api/hospitals/network`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.hospitals && data.hospitals.length > 0) {
+          setHospitals(data.hospitals)
+          setSelectedHospital(data.hospitals[0].name)
+        }
+      })
+      .catch(() => {})
+  }, [apiBase])
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const newFiles = Array.from(e.target.files)
+      setAttachedFiles(prev => [...prev, ...newFiles])
+    }
+  }
+
+  const removeFile = (idx: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== idx))
+  }
+
+  const handleTransfer = async () => {
+    if (!selectedHospital) {
+      setError('Please select a destination tertiary hospital.')
+      return
+    }
+    setLoading(true)
+    setError('')
+    try {
+      const formData = new FormData()
+      formData.append('destination_hospital', selectedHospital)
+      formData.append('urgency_level', urgency)
+      formData.append('transfer_reason', reason)
+      formData.append('clinical_summary', notes)
+      formData.append('transferred_by', patient.primary_doctor || 'Dr. Kenneth Adams, MD')
+      formData.append('include_raw_mri', String(includeMri))
+      formData.append('include_ml_dossier', String(includeMl))
+      formData.append('recipient_email', recipientEmail.trim())
+
+      // Attach all uploaded reports & scans
+      for (const f of attachedFiles) {
+        formData.append('reports', f)
+      }
+
+      const res = await fetch(`${apiBase}/api/patients/${patient.id || patient.mrn}/transfer`, {
+        method: 'POST',
+        body: formData
+      })
+
+      const text = await res.text()
+      let data: any
+      try {
+        data = JSON.parse(text)
+      } catch {
+        throw new Error(`Server response error: ${text.slice(0, 140)}`)
+      }
+
+      if (!res.ok || data.status === 'error') {
+        throw new Error(data.detail || data.message || 'Transfer failed to complete.')
+      }
+
+      setTransferSuccess(data)
+      if (onSuccess) onSuccess()
+    } catch (e: any) {
+      setError(e.message || 'Unable to authorize transfer.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const downloadManifest = () => {
+    if (!transferSuccess?.manifest) return
+    const blob = new Blob([JSON.stringify(transferSuccess.manifest, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `FHIR_TRANSFER_${patient.mrn || patient.id}_${transferSuccess.transfer_id}.json`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const activeHosp = hospitals.find(h => h.name === selectedHospital) || hospitals[0]
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+      <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-2xl border border-gray-100 flex flex-col max-h-[92vh] overflow-hidden">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 text-white">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
+              <Share2 size={20} className="text-white" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-black tracking-tight">Inter-Hospital Tele-Referral</h3>
+                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-xs">
+                  HL7 FHIR &bull; Multi-Modal Dispatch
+                </span>
+              </div>
+              <p className="text-xs text-blue-200 mt-0.5">
+                Transfer <strong className="text-white">{patient.name}</strong> ({patient.mrn || patient.id}) to partner tertiary medical center.
+              </p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-2 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition">
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Modal Body */}
+        <div className="p-6 space-y-5 overflow-y-auto flex-1">
+          {transferSuccess ? (
+            <div className="space-y-5 text-center py-4">
+              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto border-4 border-emerald-50 shadow-sm">
+                <CheckCheck size={32} />
+              </div>
+              <div>
+                <h4 className="text-lg font-black text-gray-900">Patient Transfer Authorized &amp; Dispatched!</h4>
+                <p className="text-xs text-gray-500 mt-1 max-w-md mx-auto">
+                  Digital multi-modal transfer packet has been registered with <strong className="text-gray-900">{transferSuccess.destination_hospital}</strong> under priority protocol: <span className="font-bold text-rose-600">{transferSuccess.urgency_level}</span>.
+                </p>
+              </div>
+
+              {/* Status details card */}
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200 text-left max-w-lg mx-auto space-y-2.5">
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500 font-bold">Transfer Tracking ID:</span>
+                  <span className="font-mono font-black text-blue-700">{transferSuccess.transfer_id}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500 font-bold">Receiving Center:</span>
+                  <span className="font-semibold text-gray-900">{transferSuccess.destination_hospital}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500 font-bold">Transfer Status:</span>
+                  <span className="font-bold text-emerald-600">In Transit &bull; Digital Dossier Synced</span>
+                </div>
+                <div className="flex justify-between text-xs items-center pt-1 border-t border-gray-200">
+                  <span className="text-gray-500 font-bold">Live Email Notification:</span>
+                  <span className="font-semibold text-blue-700 truncate max-w-[240px]">
+                    {transferSuccess.recipient_email || recipientEmail}
+                  </span>
+                </div>
+                {transferSuccess.attached_reports && transferSuccess.attached_reports.length > 0 && (
+                  <div className="pt-2 border-t border-gray-200 text-xs">
+                    <span className="text-gray-500 font-bold block mb-1">Attached Reports Sent ({transferSuccess.attached_reports.length}):</span>
+                    <div className="space-y-1">
+                      {transferSuccess.attached_reports.map((name: string, i: number) => (
+                        <div key={i} className="flex items-center gap-1.5 text-[11px] font-medium text-gray-700 bg-white px-2 py-1 rounded border border-gray-200">
+                          <FileText size={12} className="text-blue-600 shrink-0" />
+                          <span className="truncate">{name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                <button
+                  onClick={downloadManifest}
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 bg-[#1A56DB] hover:bg-blue-700 text-white rounded-xl text-xs font-black shadow-md shadow-blue-500/20 transition cursor-pointer"
+                >
+                  <Download size={14} /> Download FHIR Transfer Manifest (.json)
+                </button>
+                <button
+                  onClick={onClose}
+                  className="w-full sm:w-auto px-5 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl text-xs font-bold transition cursor-pointer"
+                >
+                  Done &amp; Return to Dossier
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              {error && (
+                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-semibold">
+                  {error}
+                </div>
+              )}
+
+              {/* 1. Destination Hospital Selection */}
+              <div>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-wide block mb-1.5">
+                  1. Select Destination Tertiary Medical Center
+                </label>
+                <select
+                  value={selectedHospital}
+                  onChange={e => setSelectedHospital(e.target.value)}
+                  className="w-full text-xs font-bold text-gray-900 border border-gray-200 rounded-xl px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50/50"
+                >
+                  {hospitals.map(h => (
+                    <option key={h.id} value={h.name}>
+                      {h.name} &bull; {h.distance}
+                    </option>
+                  ))}
+                </select>
+
+                {activeHosp && (
+                  <div className="mt-2 p-3 bg-blue-50/70 border border-blue-100 rounded-xl space-y-1">
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="font-black text-blue-900">{activeHosp.tier}</span>
+                      <span className="text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded-full text-[10px]">
+                        {activeHosp.intake_status}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-gray-600 font-medium">
+                      Specialties: {activeHosp.specialties?.join(', ')}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 2. Urgency Selector */}
+              <div>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-wide block mb-1.5">
+                  2. Referral Urgency &amp; Priority Level
+                </label>
+                <div className="grid grid-cols-3 gap-2.5">
+                  {[
+                    { key: 'Routine', label: 'Routine', desc: 'Standard intake', color: 'border-blue-300 text-blue-800 bg-blue-50/50' },
+                    { key: 'Urgent', label: 'Urgent (48h)', desc: 'Accelerated intake', color: 'border-amber-300 text-amber-800 bg-amber-50/50' },
+                    { key: 'Critical', label: 'Critical (Immediate)', desc: 'Emergency ICU / Surg', color: 'border-rose-400 text-rose-800 bg-rose-50/50' },
+                  ].map(opt => (
+                    <button
+                      key={opt.key}
+                      type="button"
+                      onClick={() => setUrgency(opt.key as any)}
+                      className={`p-3 rounded-xl border text-left transition cursor-pointer ${
+                        urgency === opt.key
+                          ? `${opt.color} ring-2 ring-blue-500/20 font-black shadow-xs`
+                          : 'border-gray-200 bg-gray-50/40 text-gray-600 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="text-xs font-black">{opt.label}</div>
+                      <div className="text-[10px] text-gray-400 mt-0.5">{opt.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 3. Reason for Transfer */}
+              <div>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-wide block mb-1.5">
+                  3. Clinical Justification for Tertiary Transfer
+                </label>
+                <select
+                  value={reason}
+                  onChange={e => setReason(e.target.value)}
+                  className="w-full text-xs font-semibold text-gray-900 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50/50"
+                >
+                  <option value="Requires Molecular Amyloid PET-CT Scan">Requires Molecular Amyloid PET-CT Scan (Not available locally)</option>
+                  <option value="Neurosurgical Evaluation for Detected Brain Lesion (YOLOv8)">Neurosurgical Evaluation for Detected Brain Lesion (YOLOv8)</option>
+                  <option value="Eligible for Monoclonal Antibody Infusion (Lecanemab/Donanemab)">Eligible for Monoclonal Antibody Infusion (Lecanemab / Donanemab)</option>
+                  <option value="Advanced 7T Volumetric Functional MRI">Advanced 7T Volumetric Functional MRI</option>
+                  <option value="Stereotactic Radiosurgery / CyberKnife Consultation">Stereotactic Radiosurgery / CyberKnife Consultation</option>
+                  <option value="Multi-Disciplinary Dementia Tumor Board Review">Multi-Disciplinary Dementia &amp; Tumor Board Review</option>
+                </select>
+              </div>
+
+              {/* 4. Attending Doctor Notes */}
+              <div>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-wide block mb-1.5">
+                  4. Attending Clinical Handover Notes
+                </label>
+                <textarea
+                  value={notes}
+                  onChange={e => setNotes(e.target.value)}
+                  rows={2}
+                  placeholder="Detail patient's acute symptoms, prior biomarker responses, medication allergy alerts..."
+                  className="w-full text-xs text-gray-900 border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50/50 resize-none font-medium"
+                />
+              </div>
+
+              {/* 5. Receiving Doctor / Demo Verification Email */}
+              <div>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-wide block mb-1.5 flex items-center justify-between">
+                  <span>5. Receiving Doctor / Verification Email</span>
+                  <span className="text-[10px] text-blue-600 font-semibold normal-case">Live Email Dispatch</span>
+                </label>
+                <input
+                  type="email"
+                  value={recipientEmail}
+                  onChange={e => setRecipientEmail(e.target.value)}
+                  placeholder="Enter recipient email (e.g., your email for demo proof)"
+                  className="w-full text-xs text-gray-900 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50/50 font-medium"
+                />
+                <p className="text-[10px] text-gray-500 mt-1">
+                  Full clinical transfer packet, demographics, risk scores, and all uploaded reports will be emailed here.
+                </p>
+              </div>
+
+              {/* 6. Upload Patient Reports & Scans */}
+              <div>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-wide block mb-1.5 flex items-center justify-between">
+                  <span>6. Upload Generated Patient Reports &amp; Scans</span>
+                  <span className="text-[10px] text-gray-500 font-normal">PDF, DICOM, Images, Lab CSV</span>
+                </label>
+                <div className="border-2 border-dashed border-gray-200 hover:border-blue-400 rounded-2xl p-4 bg-gray-50/60 text-center transition">
+                  <input
+                    type="file"
+                    id="transfer-file-upload"
+                    multiple
+                    accept=".pdf,.png,.jpg,.jpeg,.dcm,.zip,.csv,.txt"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <label htmlFor="transfer-file-upload" className="cursor-pointer block">
+                    <FileText className="w-8 h-8 text-blue-500 mx-auto mb-1.5" />
+                    <div className="text-xs font-bold text-gray-800">
+                      Click to upload reports, MRI scans, or lab outputs
+                    </div>
+                    <div className="text-[10px] text-gray-400 mt-0.5">
+                      Supports multiple clinical files (.pdf, .png, .jpg, .dcm)
+                    </div>
+                  </label>
+                </div>
+
+                {attachedFiles.length > 0 && (
+                  <div className="mt-2.5 space-y-1.5 max-h-36 overflow-y-auto">
+                    {attachedFiles.map((file, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-2 rounded-xl bg-blue-50/60 border border-blue-100 text-xs"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <FileText size={14} className="text-blue-600 shrink-0" />
+                          <span className="font-semibold text-gray-800 truncate">{file.name}</span>
+                          <span className="text-[10px] text-gray-400 shrink-0">
+                            ({(file.size / 1024).toFixed(1)} KB)
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(idx)}
+                          className="p-1 text-gray-400 hover:text-rose-600 transition rounded-lg hover:bg-rose-50"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 7. Bundled Multi-Modal Data Checklist */}
+              <div className="p-3.5 bg-gray-50 rounded-2xl border border-gray-100 space-y-2">
+                <div className="text-[10px] font-black text-gray-400 uppercase tracking-wider">
+                  Automatic AI Clinical Packet (Included in Manifest)
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-semibold text-gray-700">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={includeMl}
+                      onChange={e => setIncludeMl(e.target.checked)}
+                      className="w-4 h-4 rounded text-blue-600 accent-blue-600"
+                    />
+                    <span>PyTorch 4-Stage Risk &amp; SHAP Vectors</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={includeMri}
+                      onChange={e => setIncludeMri(e.target.checked)}
+                      className="w-4 h-4 rounded text-blue-600 accent-blue-600"
+                    />
+                    <span>YOLOv8 Tumor Boxes &amp; JET Heatmaps</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Dispatch Button */}
+              <button
+                onClick={handleTransfer}
+                disabled={loading}
+                className="w-full py-4 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white rounded-2xl text-xs font-black shadow-lg shadow-blue-600/20 transition flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
+              >
+                {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Share2 className="w-4 h-4" />}
+                {loading ? 'Compiling Multi-Modal Dossier & Dispatching...' : 'Authorize & Dispatch Inter-Hospital Transfer'}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
